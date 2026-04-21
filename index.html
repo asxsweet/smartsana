@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>smartsana — Оқу Платформасы</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/main.css">
+</head>
+<body>
+  <div id="authScreen">
+    <div class="auth-box">
+      <div class="auth-logo">
+        <div class="auth-logo-icon">S</div>
+        <div class="auth-logo-text">smartsana</div>
+      </div>
+      <div class="auth-tabs">
+        <div class="auth-tab active" onclick="switchAuthTab('login')">Кіру</div>
+        <div class="auth-tab" onclick="switchAuthTab('reg')">Тіркелу</div>
+      </div>
+
+      <div class="auth-form active" id="loginForm">
+        <div>
+          <label class="auth-label">Email</label>
+          <input class="auth-input" id="li_email" type="email" placeholder="email@mail.com">
+        </div>
+        <div>
+          <label class="auth-label">Құпиясөз</label>
+          <input class="auth-input" id="li_pass" type="password" placeholder="••••••••">
+        </div>
+        <div class="auth-err" id="li_err">Email немесе құпиясөз қате</div>
+        <button class="auth-btn" onclick="doLogin()">Кіру →</button>
+        <div class="auth-divider">Мұғалім панелі тек бір тұрақты аккаунтпен қолжетімді</div>
+      </div>
+
+      <div class="auth-form" id="regForm">
+        <div>
+          <label class="auth-label">Аты-жөні</label>
+          <input class="auth-input" id="rg_name" placeholder="Мысалы: Айдана Сейткали">
+        </div>
+        <div>
+          <label class="auth-label">Email</label>
+          <input class="auth-input" id="rg_email" type="email" placeholder="email@mail.com">
+        </div>
+        <div>
+          <label class="auth-label">Сынып</label>
+          <select class="auth-select" id="rg_class">
+            <option value="">— Таңдаңыз —</option>
+            <option>9А</option><option>9Б</option><option>10А</option><option>10Б</option><option>11А</option><option>11Б</option>
+          </select>
+        </div>
+        <input type="hidden" id="rg_role" value="student">
+        <div>
+          <label class="auth-label">Құпиясөз</label>
+          <input class="auth-input" id="rg_pass" type="password" placeholder="Кемінде 6 таңба">
+        </div>
+        <div class="auth-err" id="rg_err"></div>
+        <button class="auth-btn" onclick="doRegister()">Тіркелу →</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="app">
+    <header>
+      <div class="logo"><div class="logo-icon">S</div>smartsana</div>
+      <nav class="header-nav" id="headerNav"></nav>
+      <div class="header-right">
+        <div class="pulse"></div>
+        <div class="user-chip">
+          <div class="user-avatar" id="uAvatar" style="background:linear-gradient(135deg,#63b3ed,#4fd1c5);"></div>
+          <div class="user-name" id="uName"></div>
+          <div class="user-role-badge" id="uBadge"></div>
+        </div>
+        <button class="logout-btn" onclick="doLogout()">Шығу</button>
+      </div>
+    </header>
+
+    <div class="section active" id="sec-home">
+      <div class="hero">
+        <div class="hero-grid"></div>
+        <div class="hero-glow"></div>
+        <div class="hero-inner">
+          <div class="hero-tag">🎓 Диплом жобасы · smartsana</div>
+          <h1>Смарт Құрылғылар<br>жасауды <span>үйрен</span></h1>
+          <p>Arduino және IoT негізінде смарт құрылғыларды жасау арқылы практикалық дағдыларды дамытуға арналған оқу платформасы</p>
+          <div class="hero-btns">
+            <button class="btn-p" onclick="showSec('video')">Оқуды бастау</button>
+          </div>
+          <div class="hero-stats">
+            <div><div class="stat-n">5</div><div class="stat-l">Бөлім</div></div>
+            <div><div class="stat-n">12+</div><div class="stat-l">Датчик</div></div>
+            <div><div class="stat-n">AI</div><div class="stat-l">Қолдау</div></div>
+          </div>
+        </div>
+      </div>
+      <div style="max-width:1100px;margin:0 auto;padding:0 28px 80px;">
+        <div class="home-grid">
+          <div class="hcard c1" onclick="showSec('video')"><div class="hcard-n">01</div><div class="hcard-ic">🎬</div><div class="hcard-t">Видео сабақтар</div><div class="hcard-d">Қадамдық видео нұсқаулықтар</div><div class="hcard-arr">→</div></div>
+          <div class="hcard c2" onclick="showSec('sensor')"><div class="hcard-n">02</div><div class="hcard-ic">⚡</div><div class="hcard-t">Датчиктерді жалғау</div><div class="hcard-d">Схемалар мен нұсқаулықтар</div><div class="hcard-arr">→</div></div>
+          <div class="hcard c3" onclick="showSec('code')"><div class="hcard-n">03</div><div class="hcard-ic">{ }</div><div class="hcard-t">Код үлгілері</div><div class="hcard-d">Дайын код үлгілерін қарап, пайдалан</div><div class="hcard-arr">→</div></div>
+          <div class="hcard c4" onclick="showSec('question')"><div class="hcard-n">04</div><div class="hcard-ic">🤖</div><div class="hcard-t">AI Сұрақ-Жауап</div><div class="hcard-d">Кез келген сұрақты AI-ға қой</div><div class="hcard-arr">→</div></div>
+          <div class="hcard c5" onclick="showSec('feedback')"><div class="hcard-n">05</div><div class="hcard-ic">✉️</div><div class="hcard-t">Кері байланыс</div><div class="hcard-d">Мұғалімге хабарлама жіберу</div><div class="hcard-arr">→</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-video">
+      <div class="sec-hd"><div class="sec-tag">01 · Видео сабақтар</div><h2 class="sec-title">Видео материалдар</h2><p class="sec-sub">Әр сабақты қарап, тапсырмаларды орындаңыз</p></div>
+      <div class="video-grid" id="videoGrid"></div>
+    </div>
+
+    <div class="section" id="sec-sensor">
+      <div class="sec-hd"><div class="sec-tag">02 · Датчиктерді жалғау</div><h2 class="sec-title">Датчиктер нұсқаулығы</h2><p class="sec-sub">Схема, пин кестесі және ескертулер</p></div>
+      <div class="stabs" id="sensorTabs"></div>
+      <div class="scontent">
+        <div class="scard"><div class="sname" id="sName"></div><div class="sdesc" id="sDesc"></div><table class="pin-tbl"><tr><th>Датчик</th><th>Arduino</th><th>Сипат</th></tr><tbody id="pinBody"></tbody></table><div class="note-box" id="sNote"></div></div>
+        <div class="sphoto">
+          <img id="sImg" class="sensor-photo-img" alt="Датчик суреті">
+          <div style="font-size:56px;" id="sIco"></div>
+          <div style="font-size:12px;color:var(--text3);font-family:var(--mono);" id="sLbl"></div>
+          <div style="font-size:12px;color:var(--text3);margin-top:6px;" id="sPhotoHint">Фото / схема осында</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-code">
+      <div class="sec-hd"><div class="sec-tag">03 · Код үлгілері</div><h2 class="sec-title">Дайын код үлгілері</h2><p class="sec-sub">Кодты тауып жобаңда пайдалан</p></div>
+      <div class="clist" id="codeList"></div>
+    </div>
+
+    <div class="section" id="sec-question">
+      <div class="sec-hd"><div class="sec-tag">04 · AI Сұрақ-Жауап</div><h2 class="sec-title">AI Көмекші</h2><p class="sec-sub">Arduino, IoT және код қателерін AI-мен шеш. Кез келген сұрағыңды қазақша жаз.</p></div>
+      <div class="chat-layout">
+        <div class="chatbox">
+          <div class="ctop"><div class="cav">AI</div><div><div class="cname">Arduino AI Көмекші</div><div class="cstatus">● Claude AI — белсенді</div></div></div>
+          <div class="cmessages" id="qMsgs">
+            <div class="msg"><div class="mav bav">AI</div><div class="bubble bot-b">Сәлем! Мен Arduino және IoT бойынша AI көмекшісімін. Сұрағыңды жаз немесе қате хабарламаңды осында жіберіп шешімін тап! 🚀</div></div>
+          </div>
+          <div class="cinput-row">
+            <textarea class="cinput" id="qInput" placeholder="Сұрағыңызды немесе қате мәтінін жазыңыз..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendAI('q')}"></textarea>
+            <button class="sbtn" onclick="sendAI('q')"><svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg></button>
+          </div>
+        </div>
+        <div>
+          <div class="side-card">
+            <h4>Жылдам сұрақтар</h4>
+            <div class="qq" onclick="setQ('Arduino дегеніміз не?')">Arduino дегеніміз не?</div>
+            <div class="qq" onclick="setQ('LED жалғау схемасы')">LED жалғау схемасы</div>
+            <div class="qq" onclick="setQ('DHT11 коды')">DHT11 коды</div>
+            <div class="qq" onclick="setQ('IoT деген не?')">IoT деген не?</div>
+            <div class="qq" onclick="setQ('Смарт үй жобасы')">Смарт үй жобасы</div>
+          </div>
+          <div class="side-card">
+            <h4>Қате шешу</h4>
+            <div class="qq" onclick="setQ('was not declared in this scope қатесін шеш')">was not declared</div>
+            <div class="qq" onclick="setQ('avrdude programmer not responding шешімі')">Programmer not responding</div>
+            <div class="qq" onclick="setQ('expected semicolon before token қатесі')">Expected semicolon</div>
+            <div class="qq" onclick="setQ('No such file or directory кітапхана қатесі')">No such file/directory</div>
+          </div>
+          <div class="side-card">
+            <h4>Ақпарат</h4>
+            <div style="font-size:13px;color:var(--text2);line-height:1.6;">Claude AI (Anthropic) технологиясы. Қазақша кез келген техникалық сұрақты қою мүмкін.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-feedback">
+      <div class="sec-hd"><div class="sec-tag">05 · Кері байланыс</div><h2 class="sec-title">Мұғалімге жазу</h2><p class="sec-sub">Сұрағыңызды немесе ұсынысыңызды мұғалімге жіберіңіз</p></div>
+      <div class="fb-grid">
+        <div>
+          <div class="teacher-chip"><div class="tav">М</div><div><div style="font-size:11px;color:var(--accent);font-family:var(--mono);margin-bottom:3px;">Информатика мұғалімі</div><div style="font-size:15px;font-weight:700;color:var(--text);">Мұғалім</div><div style="font-size:12px;color:var(--text3);">Хабарлама 24 сағатта жауапталады</div></div></div>
+          <div class="fb-form">
+            <h3>Хабарлама жіберу</h3><p>Сұрағыңызды немесе пікіріңізді жазыңыз</p>
+            <div class="fg"><label class="fl">Аты-жөні</label><input class="fi" id="fbN" placeholder="Аты-жөніңіз"></div>
+            <div class="fg"><label class="fl">Сынып</label><select class="fs" id="fbC"><option>9А</option><option>9Б</option><option>10А</option><option>10Б</option><option>11А</option></select></div>
+            <div class="fg"><label class="fl">Хабарлама түрі</label><select class="fs" id="fbT"><option>Сабаққа байланысты сұрақ</option><option>Техникалық мәселе</option><option>Ұсыныс / пікір</option><option>Басқа</option></select></div>
+            <div class="fg"><label class="fl">Хабарлама</label><textarea class="fta" id="fbM" placeholder="Сұрағыңызды толық жазыңыз..."></textarea></div>
+            <button class="sub-btn" onclick="submitFB()">Жіберу →</button>
+            <div class="ok-msg" id="fbOk">✅ Хабарламаңыз жіберілді! Мұғалім жауап береді.</div>
+          </div>
+        </div>
+        <div>
+          <div class="ic"><div class="ic-icon">💬</div><h4>Сабақта не түсінбедіңіз?</h4><p>Қандай тақырыпты қайта түсіндіруді сұрасаңыз да болады.</p></div>
+          <div class="ic"><div class="ic-icon">🔧</div><h4>Техникалық мәселе</h4><p>Arduino жұмыс жасамаса немесе код жүктелмесе — мұғалімге жазыңыз.</p></div>
+          <div class="ic"><div class="ic-icon">💡</div><h4>Ұсыныс</h4><p>Сабақты жақсарту бойынша ұсыныстарыңызды жіберіңіз.</p></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-submissions">
+      <div class="sec-hd"><div class="sec-tag">Мұғалім · Тапсырмалар</div><h2 class="sec-title">Студент тапсырмалары</h2><p class="sec-sub">Жіберілген, бағаланған және бағалауды күтіп тұрған жұмыстар</p></div>
+      <div id="submissionDashboard"></div>
+    </div>
+
+    <div class="section" id="sec-students">
+      <div class="sec-hd"><div class="sec-tag">Мұғалім · Студенттер</div><h2 class="sec-title">Студенттерді басқару</h2><p class="sec-sub">Студенттер тізімі және тапсырма прогресі</p></div>
+      <div class="fb-grid">
+        <div class="fb-form">
+          <h3>Студенттер</h3>
+          <div id="studentsManageList"></div>
+        </div>
+        <div class="fb-form">
+          <h3>Прогресс</h3>
+          <div id="studentProgressPanel" class="empty-state">Студентті таңдаңыз</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-teacher">
+      <div class="sec-hd"><div class="sec-tag">Мұғалім панелі</div><h2 class="sec-title">Басқару панелі</h2><p class="sec-sub">Оқушыларды, мазмұнды және хабарламаларды басқару</p></div>
+      <div class="tp-tabs">
+        <button class="tp-tab active" onclick="tpTab(this,'tp-stats')">📊 Статистика</button>
+        <button class="tp-tab" onclick="tpTab(this,'tp-students')">🎓 Оқушылар</button>
+        <button class="tp-tab" onclick="tpTab(this,'tp-videos')">🎬 Видеолар</button>
+        <button class="tp-tab" onclick="tpTab(this,'tp-msgs')">✉️ Хабарламалар</button>
+      </div>
+      <div class="tp-content active" id="tp-stats">
+        <div class="stats-row">
+          <div class="stat-card"><div class="n" id="sc-students">0</div><div class="l">Оқушы</div></div>
+          <div class="stat-card"><div class="n" id="sc-msgs">0</div><div class="l">Хабарлама</div></div>
+          <div class="stat-card"><div class="n" id="sc-videos">0</div><div class="l">Видео</div></div>
+          <div class="stat-card"><div class="n">AI</div><div class="l">Жасанды интеллект</div></div>
+        </div>
+        <div style="background:var(--card);border:0.5px solid var(--border);border-radius:var(--r);padding:22px;">
+          <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:14px;">Соңғы тіркелгендер</div>
+          <table class="data-table" id="recentTable">
+            <tr><th>Аты-жөні</th><th>Сынып</th><th>Тіркелу уақыты</th><th>Рөл</th></tr>
+          </table>
+        </div>
+      </div>
+      <div class="tp-content" id="tp-students">
+        <div style="background:var(--card);border:0.5px solid var(--border);border-radius:var(--r);overflow:hidden;">
+          <table class="data-table" id="studentsTable">
+            <tr><th>Аты-жөні</th><th>Email</th><th>Сынып</th><th>Рөл</th><th>Іс-әрекет</th></tr>
+          </table>
+        </div>
+      </div>
+      <div class="tp-content" id="tp-videos">
+        <div class="add-form">
+          <h3>➕ Жаңа видео қосу</h3>
+          <div class="form-row">
+            <div class="fg"><label class="fl">Сабақ нөмірі</label><input class="fi" id="v_num" placeholder="Мысалы: 5"></div>
+            <div class="fg"><label class="fl">Ұзақтығы</label><input class="fi" id="v_dur" placeholder="Мысалы: 12:30"></div>
+          </div>
+          <div class="fg"><label class="fl">Тақырып</label><input class="fi" id="v_title" placeholder="Сабақтың тақырыбы"></div>
+          <div class="fg"><label class="fl">Сипаттама</label><input class="fi" id="v_desc" placeholder="Қысқаша сипаттама"></div>
+          <div class="fg"><label class="fl">YouTube сілтемесі (міндетті емес)</label><input class="fi" id="v_url" placeholder="https://youtube.com/watch?v=..."></div>
+          <button class="add-btn" onclick="addVideo()">Видео қосу</button>
+        </div>
+        <table class="data-table" id="videosTable">
+          <tr><th>№</th><th>Тақырып</th><th>Ұзақтық</th><th>Іс-әрекет</th></tr>
+        </table>
+      </div>
+      <div class="tp-content" id="tp-msgs"><div class="msg-list" id="msgList"></div></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <div class="modal-overlay" id="crudModalOverlay">
+    <div class="modal">
+      <h3 id="crudModalTitle">Форма</h3>
+      <div id="crudModalBody"></div>
+      <div class="modal-btns">
+        <button class="mbtn mbtn-cancel" onclick="closeCrudModal()">Бас тарту</button>
+        <button class="mbtn mbtn-ok" id="crudModalSaveBtn">Сақтау</button>
+      </div>
+    </div>
+  </div>
+  <div class="modal-overlay" id="lessonModalOverlay">
+    <div class="modal" style="max-width:900px;">
+      <h3 id="lessonModalTitle">Видео сабақ</h3>
+      <div id="lessonModalBody"></div>
+      <div class="modal-btns">
+        <button class="mbtn mbtn-cancel" onclick="closeLessonModal()">Жабу</button>
+      </div>
+    </div>
+  </div>
+  <script src="./js/api.js"></script>
+  <script src="./js/app.js"></script>
+</body>
+</html>
