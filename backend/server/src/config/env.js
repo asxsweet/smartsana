@@ -15,6 +15,7 @@ const env = {
   cloudinaryApiKey: process.env.CLOUDINARY_API_KEY || "",
   cloudinaryApiSecret: process.env.CLOUDINARY_API_SECRET || "",
   teacherSetupCode: process.env.TEACHER_SETUP_CODE || "",
+  teacherMaxAccounts: Math.max(1, Number(process.env.TEACHER_MAX_ACCOUNTS || 6)),
 };
 
 function validateEnv() {

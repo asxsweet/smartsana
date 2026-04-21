@@ -81,9 +81,9 @@ router.post("/register", async (req, res) => {
     if (teacherSetupCode !== env.teacherSetupCode) {
       return res.status(403).json({ message: "Teacher setup code is invalid" });
     }
-    const teacherExists = await User.findOne({ role: "teacher" }).lean();
-    if (teacherExists) {
-      return res.status(409).json({ message: "Teacher account already exists" });
+    const teachersCount = await User.countDocuments({ role: "teacher" });
+    if (teachersCount >= env.teacherMaxAccounts) {
+      return res.status(409).json({ message: `Teacher account limit reached (${env.teacherMaxAccounts})` });
     }
     finalRole = "teacher";
   }
