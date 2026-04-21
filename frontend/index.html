@@ -49,6 +49,14 @@
             <option>9А</option><option>9Б</option><option>10А</option><option>10Б</option><option>11А</option><option>11Б</option>
           </select>
         </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <input id="rg_teacher_mode" type="checkbox" onchange="toggleTeacherRegMode(this.checked)">
+          <label for="rg_teacher_mode" class="auth-label" style="margin:0;">Бір реттік мұғалім тіркеуі</label>
+        </div>
+        <div id="rg_teacher_code_wrap" style="display:none;">
+          <label class="auth-label">Мұғалім тіркеу коды</label>
+          <input class="auth-input" id="rg_teacher_code" type="password" placeholder="Setup коды">
+        </div>
         <input type="hidden" id="rg_role" value="student">
         <div>
           <label class="auth-label">Құпиясөз</label>

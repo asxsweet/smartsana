@@ -21,14 +21,29 @@ function switchAuthTab(t) {
   document.getElementById('regForm').classList.toggle('active', t === 'reg');
 }
 
+function toggleTeacherRegMode(enabled) {
+  const wrap = document.getElementById("rg_teacher_code_wrap");
+  const roleInput = document.getElementById("rg_role");
+  const classSelect = document.getElementById("rg_class");
+  if (wrap) wrap.style.display = enabled ? "block" : "none";
+  if (roleInput) roleInput.value = enabled ? "teacher" : "student";
+  if (classSelect) classSelect.disabled = enabled;
+}
+
 async function doLogin() {
   try {
     const email = document.getElementById('li_email').value.trim();
     const password = document.getElementById('li_pass').value;
+    const err = document.getElementById('li_err');
     const { token, user } = await apiRequest('/auth/login', { method: 'POST', body: JSON.stringify({ email, password }) });
     setToken(token);
+    err.style.display = "none";
     await afterLogin(user);
-  } catch (_e) { document.getElementById('li_err').style.display = 'block'; }
+  } catch (e) {
+    const err = document.getElementById('li_err');
+    err.textContent = e?.message || 'Email немесе құпиясөз қате';
+    err.style.display = 'block';
+  }
 }
 
 async function doRegister() {
@@ -36,14 +51,24 @@ async function doRegister() {
   const email = document.getElementById('rg_email').value.trim();
   const className = document.getElementById('rg_class').value;
   const password = document.getElementById('rg_pass').value;
+  const role = document.getElementById('rg_role').value || "student";
+  const teacherSetupCode = (document.getElementById("rg_teacher_code")?.value || "").trim();
   const err = document.getElementById("rg_err");
+  if (role === "teacher" && !teacherSetupCode) {
+    err.textContent = "Мұғалім тіркеу кодын енгізіңіз.";
+    err.style.display = "block";
+    return;
+  }
   try {
-    const { token, user } = await apiRequest('/auth/register', { method: 'POST', body: JSON.stringify({ name, email, password, className }) });
+    const { token, user } = await apiRequest('/auth/register', {
+      method: 'POST',
+      body: JSON.stringify({ name, email, password, className, role, teacherSetupCode }),
+    });
     setToken(token);
     err.style.display = "none";
     return afterLogin(user);
   } catch (e) {
-    err.textContent = e?.status === 409 ? "Бұл email бұрыннан тіркелген. Кіруді пайдаланыңыз." : (e?.message || "Тіркелу қатесі");
+    err.textContent = e?.message || "Тіркелу қатесі";
     err.style.display = "block";
   }
 }
