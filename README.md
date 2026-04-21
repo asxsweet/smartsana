@@ -1,8 +1,8 @@
 # Arduino IoT Fullstack
 
 Бұл жоба енді fullstack форматта жұмыс істейді:
-- Frontend: `index.html`, `css/main.css`, `js/*`
-- Backend: Express + MongoDB (`server/src/*`)
+- Frontend: `frontend/index.html`, `frontend/css/main.css`, `frontend/js/*`
+- Backend: Express + MongoDB (`backend/server/src/*`)
 - Auth: JWT + role-based (`student`, `teacher`)
 
 ## 1) Орнату
@@ -50,7 +50,7 @@ npm run dev
 
 Егер фронтты бөлек статик ретінде ашқыңыз келсе (`Live Server`, `Vercel preview`):
 - `CLIENT_ORIGIN` ішінде сол домен/порт болуы керек
-- `vercel.json` арқылы `/api/*` сұраулары Render-ге проксиланады
+- `frontend/vercel.json` арқылы `/api/*` сұраулары Render-ге проксиланады
 
 ## 3.1) Deploy (Render + Vercel)
 
@@ -69,12 +69,13 @@ npm run dev
 ### B) Frontend-ті Vercel-ге шығару
 
 1. Сол репозиторийді Vercel-ге импорттаңыз.
-2. Framework preset: `Other` (static).
-3. Build command қажет емес.
-4. Deploy алдында `vercel.json` ішіндегі:
+2. Root Directory: `frontend`
+3. Framework preset: `Other` (static).
+4. Build command қажет емес.
+5. Deploy алдында `frontend/vercel.json` ішіндегі:
    - `https://your-render-service.onrender.com`
    мәнін өз Render URL-іңізге ауыстырыңыз.
-5. Deploy кейін Vercel доменінен сайт ашылып, `/api/*` сұраулары Render API-ға барады.
+6. Deploy кейін Vercel доменінен сайт ашылып, `/api/*` сұраулары Render API-ға барады.
 
 ## 3.2) Бір уақытта local + internet режимі
 

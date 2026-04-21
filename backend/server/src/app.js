@@ -37,7 +37,7 @@ app.use("/api/stats", statsRoutes);
 app.use("/api/ai", aiRoutes);
 app.use("/api/site-config", siteConfigRoutes);
 
-const rootDir = path.resolve(__dirname, "..", "..");
+const rootDir = path.resolve(__dirname, "..", "..", "..", "frontend");
 app.use(express.static(rootDir));
 app.use((_req, res) => {
   res.sendFile(path.join(rootDir, "index.html"));

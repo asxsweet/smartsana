@@ -2,11 +2,11 @@
   "name": "aichat",
   "version": "1.0.0",
   "description": "",
-  "main": "server/src/index.js",
+  "main": "backend/server/src/index.js",
   "scripts": {
-    "dev": "nodemon server/src/index.js",
-    "start": "node server/src/index.js",
-    "seed": "node server/src/seed/seed.js"
+    "dev": "nodemon backend/server/src/index.js",
+    "start": "node backend/server/src/index.js",
+    "seed": "node backend/server/src/seed/seed.js"
   },
   "keywords": [],
   "author": "",
