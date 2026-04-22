@@ -161,7 +161,8 @@ async function loadData() {
   conversations = c.conversations || [];
   const progress = progressData?.progress || [];
   videoProgressById = progress.reduce((acc, item) => {
-    acc[String(item.videoId)] = item.lastViewedAt;
+    const key = String(item.videoId?._id || item.videoId || "");
+    if (key) acc[key] = item.lastViewedAt;
     return acc;
   }, {});
   if (currentUser.role === "teacher") {
@@ -296,8 +297,8 @@ async function openVideoLesson(videoId) {
           </div>`).join("") || '<div class="empty-state">Жіберілім жоқ</div>'}
       </div>`;
   } else {
-    await apiRequest(`/videos/${videoId}/viewed`, { method: "POST" }).catch(() => null);
-    videoProgressById[String(videoId)] = new Date().toISOString();
+    const lastViewedAt = data.lastViewedAt || new Date().toISOString();
+    videoProgressById[String(videoId)] = lastViewedAt;
     renderVideos();
     const submission = data.submission;
     bodyEl.innerHTML = `

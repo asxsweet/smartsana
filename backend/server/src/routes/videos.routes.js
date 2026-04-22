@@ -66,7 +66,11 @@ router.post("/", requireAuth, requireRole("teacher"), async (req, res) => {
 router.get("/progress/me", requireAuth, async (req, res) => {
   if (req.user.role !== "student") return res.json({ progress: [] });
   const progress = await VideoView.find({ studentId: req.user._id }).lean();
-  return res.json({ progress });
+  const normalized = progress.map((p) => ({
+    videoId: String(p.videoId),
+    lastViewedAt: p.lastViewedAt || null,
+  }));
+  return res.json({ progress: normalized });
 });
 
 router.delete("/:id", requireAuth, requireRole("teacher"), async (req, res) => {
@@ -88,7 +92,11 @@ router.get("/:id/lesson", requireAuth, async (req, res) => {
   }
 
   const submission = await VideoSubmission.findOne({ videoId: video._id, studentId: req.user._id }).lean();
-  const view = await VideoView.findOne({ videoId: video._id, studentId: req.user._id }).lean();
+  const view = await VideoView.findOneAndUpdate(
+    { videoId: video._id, studentId: req.user._id },
+    { $set: { lastViewedAt: new Date() } },
+    { upsert: true, new: true }
+  ).lean();
   return res.json({ video, submission, lastViewedAt: view?.lastViewedAt || null });
 });
 
