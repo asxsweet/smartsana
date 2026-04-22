@@ -6,7 +6,12 @@
   "scripts": {
     "dev": "nodemon backend/server/src/index.js",
     "start": "node backend/server/src/index.js",
-    "seed": "node backend/server/src/seed/seed.js"
+    "seed": "node backend/server/src/seed/seed.js",
+    "seed:dev": "cross-env SEED_PROFILE=dev node backend/server/src/seed/seed.js",
+    "seed:stage": "cross-env SEED_PROFILE=stage node backend/server/src/seed/seed.js",
+    "seed:prod": "cross-env SEED_PROFILE=prod node backend/server/src/seed/seed.js",
+    "test": "jest --runInBand",
+    "test:e2e": "playwright test"
   },
   "keywords": [],
   "author": "",
@@ -20,9 +25,15 @@
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.5.0",
+    "winston": "^3.19.0",
     "zod": "^4.3.6"
   },
   "devDependencies": {
-    "nodemon": "^3.1.14"
+    "cross-env": "^10.1.0",
+    "jest": "^30.2.0",
+    "mongodb-memory-server": "^10.2.3",
+    "nodemon": "^3.1.14",
+    "@playwright/test": "^1.55.0",
+    "supertest": "^7.1.4"
   }
 }

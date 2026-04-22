@@ -8,6 +8,11 @@ const conversationSchema = new mongoose.Schema(
     subject: { type: String, required: true, trim: true },
     status: { type: String, enum: ["open", "closed"], default: "open" },
     lastMessageAt: { type: Date, default: Date.now },
+    lastMessagePreview: { type: String, default: "" },
+    unreadForTeacher: { type: Number, default: 0 },
+    unreadForStudent: { type: Number, default: 0 },
+    lastSeenByTeacherAt: { type: Date, default: null },
+    lastSeenByStudentAt: { type: Date, default: null },
   },
   { timestamps: true }
 );

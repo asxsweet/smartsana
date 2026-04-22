@@ -26,11 +26,13 @@
         </div>
         <div>
           <label class="auth-label">Құпиясөз</label>
-          <input class="auth-input" id="li_pass" type="password" placeholder="••••••••">
+          <div class="auth-pass-wrap">
+            <input class="auth-input auth-pass-input" id="li_pass" type="password" placeholder="••••••••">
+            <button type="button" class="pass-toggle-btn is-hidden" onclick="togglePasswordVisibility('li_pass', this)" aria-label="Құпиясөзді көрсету/жасыру"><span class="eye-icon">👁</span></button>
+          </div>
         </div>
         <div class="auth-err" id="li_err">Email немесе құпиясөз қате</div>
         <button class="auth-btn" onclick="doLogin()">Кіру →</button>
-        <div class="auth-divider">Мұғалім панелі тек бір тұрақты аккаунтпен қолжетімді</div>
       </div>
 
       <div class="auth-form" id="regForm">
@@ -55,12 +57,18 @@
         </div>
         <div id="rg_teacher_code_wrap" style="display:none;">
           <label class="auth-label">Мұғалім тіркеу коды</label>
-          <input class="auth-input" id="rg_teacher_code" type="password" placeholder="Setup коды">
+          <div class="auth-pass-wrap">
+            <input class="auth-input auth-pass-input" id="rg_teacher_code" type="password" placeholder="Setup коды">
+            <button type="button" class="pass-toggle-btn is-hidden" onclick="togglePasswordVisibility('rg_teacher_code', this)" aria-label="Кодты көрсету/жасыру"><span class="eye-icon">👁</span></button>
+          </div>
         </div>
         <input type="hidden" id="rg_role" value="student">
         <div>
           <label class="auth-label">Құпиясөз</label>
-          <input class="auth-input" id="rg_pass" type="password" placeholder="Кемінде 6 таңба">
+          <div class="auth-pass-wrap">
+            <input class="auth-input auth-pass-input" id="rg_pass" type="password" placeholder="Кемінде 6 таңба">
+            <button type="button" class="pass-toggle-btn is-hidden" onclick="togglePasswordVisibility('rg_pass', this)" aria-label="Құпиясөзді көрсету/жасыру"><span class="eye-icon">👁</span></button>
+          </div>
         </div>
         <div class="auth-err" id="rg_err"></div>
         <button class="auth-btn" onclick="doRegister()">Тіркелу →</button>
@@ -74,7 +82,7 @@
       <nav class="header-nav" id="headerNav"></nav>
       <div class="header-right">
         <div class="pulse"></div>
-        <div class="user-chip">
+        <div class="user-chip" onclick="showSec('profile')">
           <div class="user-avatar" id="uAvatar" style="background:linear-gradient(135deg,#63b3ed,#4fd1c5);"></div>
           <div class="user-name" id="uName"></div>
           <div class="user-role-badge" id="uBadge"></div>
@@ -140,7 +148,7 @@
       <div class="sec-hd"><div class="sec-tag">04 · AI Сұрақ-Жауап</div><h2 class="sec-title">AI Көмекші</h2><p class="sec-sub">Arduino, IoT және код қателерін AI-мен шеш. Кез келген сұрағыңды қазақша жаз.</p></div>
       <div class="chat-layout">
         <div class="chatbox">
-          <div class="ctop"><div class="cav">AI</div><div><div class="cname">Arduino AI Көмекші</div><div class="cstatus">● Claude AI — белсенді</div></div></div>
+          <div class="ctop"><div class="cav">AI</div><div><div class="cname">Arduino AI Көмекші</div><div class="cstatus">● Arduino AI - белсенді</div></div></div>
           <div class="cmessages" id="qMsgs">
             <div class="msg"><div class="mav bav">AI</div><div class="bubble bot-b">Сәлем! Мен Arduino және IoT бойынша AI көмекшісімін. Сұрағыңды жаз немесе қате хабарламаңды осында жіберіп шешімін тап! 🚀</div></div>
           </div>
@@ -164,10 +172,6 @@
             <div class="qq" onclick="setQ('avrdude programmer not responding шешімі')">Programmer not responding</div>
             <div class="qq" onclick="setQ('expected semicolon before token қатесі')">Expected semicolon</div>
             <div class="qq" onclick="setQ('No such file or directory кітапхана қатесі')">No such file/directory</div>
-          </div>
-          <div class="side-card">
-            <h4>Ақпарат</h4>
-            <div style="font-size:13px;color:var(--text2);line-height:1.6;">Claude AI (Anthropic) технологиясы. Қазақша кез келген техникалық сұрақты қою мүмкін.</div>
           </div>
         </div>
       </div>
@@ -198,6 +202,12 @@
 
     <div class="section" id="sec-submissions">
       <div class="sec-hd"><div class="sec-tag">Мұғалім · Тапсырмалар</div><h2 class="sec-title">Студент тапсырмалары</h2><p class="sec-sub">Жіберілген, бағаланған және бағалауды күтіп тұрған жұмыстар</p></div>
+      <div class="fb-form" style="margin-bottom:14px;">
+        <div class="form-row">
+          <div class="fg"><label class="fl">Іздеу</label><input class="fi" id="submissionSearchInput" placeholder="Студент немесе видео атауы" oninput="renderSubmissionDashboard()"></div>
+          <div class="fg"><label class="fl">Сұрыптау</label><select class="fs" id="submissionSortSelect" onchange="renderSubmissionDashboard()"><option value="new">Жаңа алдымен</option><option value="old">Ескі алдымен</option><option value="score">Ұпай бойынша</option></select></div>
+        </div>
+      </div>
       <div id="submissionDashboard"></div>
     </div>
 
@@ -206,11 +216,45 @@
       <div class="fb-grid">
         <div class="fb-form">
           <h3>Студенттер</h3>
+          <div class="form-row">
+            <div class="fg"><label class="fl">Іздеу</label><input class="fi" id="studentSearchInput" placeholder="Аты, email, сынып" oninput="renderStudentsManage()"></div>
+            <div class="fg"><label class="fl">Сұрыптау</label><select class="fs" id="studentSortSelect" onchange="renderStudentsManage()"><option value="new">Жаңа алдымен</option><option value="name">Аты бойынша</option></select></div>
+          </div>
           <div id="studentsManageList"></div>
         </div>
         <div class="fb-form">
           <h3>Прогресс</h3>
           <div id="studentProgressPanel" class="empty-state">Студентті таңдаңыз</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" id="sec-profile">
+      <div class="sec-hd"><div class="sec-tag">Профиль</div><h2 class="sec-title">Жеке кабинет</h2><p class="sec-sub">Студент және мұғалім профилі: жеке ақпарат, био және байланыс деректері</p></div>
+      <div class="fb-grid">
+        <div class="fb-form">
+          <h3>Негізгі ақпарат</h3>
+          <div class="fg">
+            <label class="fl">Аватар</label>
+            <input class="fi" id="pf_avatar_file" type="file" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" onchange="previewAvatarFile()">
+            <img id="pf_avatar_preview" alt="Avatar preview" style="width:64px;height:64px;border-radius:50%;margin-top:8px;display:none;object-fit:cover;border:1px solid rgba(99,179,237,.25);">
+          </div>
+          <div class="fg"><label class="fl">Аты-жөні</label><input class="fi" id="pf_name" placeholder="Аты-жөніңіз"></div>
+          <div class="fg"><label class="fl">Email</label><input class="fi" id="pf_email" disabled></div>
+          <div class="fg"><label class="fl">Рөл</label><input class="fi" id="pf_role" disabled></div>
+          <div class="fg" id="pf_class_wrap"><label class="fl">Сынып (тек студентке)</label><input class="fi" id="pf_class" placeholder="Мысалы: 10А"></div>
+          <div class="fg"><label class="fl">Телефон</label><input class="fi" id="pf_phone" placeholder="+7 ..."></div>
+          <div class="fg"><label class="fl">Орналасқан жер</label><input class="fi" id="pf_location" placeholder="Қала / мектеп"></div>
+          <button class="sub-btn" onclick="saveProfile(this)">Профильді сақтау</button>
+        </div>
+        <div class="fb-form">
+          <h3>Био</h3>
+          <div class="fg"><label class="fl">Өзіңіз туралы</label><textarea class="fta" id="pf_bio" placeholder="Қысқаша ақпарат..."></textarea></div>
+          <div class="note-box">Профиль ақпараты тек өз аккаунтыңызға сақталады.</div>
+          <h3 style="margin-top:16px;">Құпиясөзді өзгерту</h3>
+          <div class="fg"><label class="fl">Ағымдағы құпиясөз</label><input class="fi" id="pf_current_pass" type="password" placeholder="Қазіргі пароль"></div>
+          <div class="fg"><label class="fl">Жаңа құпиясөз</label><input class="fi" id="pf_new_pass" type="password" placeholder="Жаңа пароль"></div>
+          <button class="sub-btn" onclick="changePassword(this)">Құпиясөзді жаңарту</button>
         </div>
       </div>
     </div>
@@ -284,7 +328,19 @@
       </div>
     </div>
   </div>
+  <div class="modal-overlay" id="confirmModalOverlay">
+    <div class="modal" style="max-width:420px;">
+      <h3 id="confirmModalTitle">Растау</h3>
+      <div id="confirmModalMessage" style="color:var(--text2);line-height:1.6;"></div>
+      <div class="modal-btns">
+        <button class="mbtn mbtn-cancel" onclick="resolveConfirm(false)">Жоқ</button>
+        <button class="mbtn mbtn-ok" onclick="resolveConfirm(true)">Иә</button>
+      </div>
+    </div>
+  </div>
   <script src="./js/api.js"></script>
+  <script src="./js/ui-utils.js"></script>
+  <script src="./js/profile-module.js"></script>
   <script src="./js/app.js"></script>
 </body>
 </html>

@@ -36,6 +36,10 @@ router.post("/conversations", requireAuth, async (req, res) => {
     className: req.user.className || "",
     subject: parsed.data.subject,
     lastMessageAt: new Date(),
+    lastMessagePreview: parsed.data.text.slice(0, 140),
+    unreadForTeacher: 1,
+    unreadForStudent: 0,
+    lastSeenByStudentAt: new Date(),
   });
 
   await ChatMessage.create({
@@ -49,13 +53,21 @@ router.post("/conversations", requireAuth, async (req, res) => {
 });
 
 router.get("/conversations/:id/messages", requireAuth, async (req, res) => {
-  const conversation = await Conversation.findById(req.params.id).lean();
+  const conversation = await Conversation.findById(req.params.id);
   if (!conversation) return res.status(404).json({ message: "Conversation not found" });
   if (req.user.role !== "teacher" && String(conversation.studentId) !== String(req.user._id)) {
     return res.status(403).json({ message: "Forbidden" });
   }
+  if (req.user.role === "teacher") {
+    conversation.unreadForTeacher = 0;
+    conversation.lastSeenByTeacherAt = new Date();
+  } else {
+    conversation.unreadForStudent = 0;
+    conversation.lastSeenByStudentAt = new Date();
+  }
+  await conversation.save();
   const messages = await ChatMessage.find({ conversationId: conversation._id }).sort({ createdAt: 1 }).lean();
-  return res.json({ conversation, messages });
+  return res.json({ conversation: conversation.toObject(), messages });
 });
 
 router.post("/conversations/:id/messages", requireAuth, async (req, res) => {
@@ -78,6 +90,16 @@ router.post("/conversations/:id/messages", requireAuth, async (req, res) => {
   });
 
   conversation.lastMessageAt = new Date();
+  conversation.lastMessagePreview = parsed.data.text.slice(0, 140);
+  if (req.user.role === "teacher") {
+    conversation.unreadForStudent = (conversation.unreadForStudent || 0) + 1;
+    conversation.unreadForTeacher = 0;
+    conversation.lastSeenByTeacherAt = new Date();
+  } else {
+    conversation.unreadForTeacher = (conversation.unreadForTeacher || 0) + 1;
+    conversation.unreadForStudent = 0;
+    conversation.lastSeenByStudentAt = new Date();
+  }
   await conversation.save();
 
   return res.status(201).json({ message });

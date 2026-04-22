@@ -2,6 +2,7 @@ const express = require("express");
 const { z } = require("zod");
 const Video = require("../models/Video");
 const VideoSubmission = require("../models/VideoSubmission");
+const VideoView = require("../models/VideoView");
 const { requireAuth, requireRole } = require("../middlewares/auth");
 const { isConfigured: isCloudinaryConfigured, uploadSubmissionFile } = require("../services/cloudinary");
 
@@ -48,8 +49,24 @@ router.post("/", requireAuth, requireRole("teacher"), async (req, res) => {
   if (!parsed.success) {
     return res.status(400).json({ message: "Invalid request", issues: parsed.error.flatten() });
   }
+  const duplicate = await Video.findOne({
+    $or: [
+      { num: parsed.data.num },
+      ...(parsed.data.url ? [{ url: parsed.data.url }] : []),
+      { title: parsed.data.title },
+    ],
+  }).lean();
+  if (duplicate) {
+    return res.status(409).json({ message: "Ұқсас видео бұрын қосылған" });
+  }
   const video = await Video.create({ ...parsed.data, createdBy: req.user._id });
   return res.status(201).json({ video });
+});
+
+router.get("/progress/me", requireAuth, async (req, res) => {
+  if (req.user.role !== "student") return res.json({ progress: [] });
+  const progress = await VideoView.find({ studentId: req.user._id }).lean();
+  return res.json({ progress });
 });
 
 router.delete("/:id", requireAuth, requireRole("teacher"), async (req, res) => {
@@ -71,7 +88,20 @@ router.get("/:id/lesson", requireAuth, async (req, res) => {
   }
 
   const submission = await VideoSubmission.findOne({ videoId: video._id, studentId: req.user._id }).lean();
-  return res.json({ video, submission });
+  const view = await VideoView.findOne({ videoId: video._id, studentId: req.user._id }).lean();
+  return res.json({ video, submission, lastViewedAt: view?.lastViewedAt || null });
+});
+
+router.post("/:id/viewed", requireAuth, async (req, res) => {
+  if (req.user.role !== "student") return res.status(403).json({ message: "Only students can track progress" });
+  const video = await Video.findById(req.params.id).lean();
+  if (!video) return res.status(404).json({ message: "Video not found" });
+  const viewed = await VideoView.findOneAndUpdate(
+    { videoId: req.params.id, studentId: req.user._id },
+    { $set: { lastViewedAt: new Date() } },
+    { upsert: true, new: true }
+  );
+  return res.json({ viewed });
 });
 
 router.post("/:id/submissions", requireAuth, async (req, res) => {

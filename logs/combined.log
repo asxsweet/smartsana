@@ -1,0 +1,278 @@
+{"level":"info","message":"Server running on http://localhost:5000","timestamp":"2026-04-22T12:29:58.657Z"}
+{"level":"info","message":"Server running on http://localhost:5000","timestamp":"2026-04-22T12:30:11.864Z"}
+{"level":"info","message":"Server running on http://localhost:5000","timestamp":"2026-04-22T12:30:17.405Z"}
+{"level":"info","message":"Server running on http://localhost:5000","timestamp":"2026-04-22T12:35:36.211Z"}
+{"level":"info","message":"Server running on http://localhost:5000","timestamp":"2026-04-22T12:35:39.774Z"}
+{"level":"info","message":"Server running on http://localhost:5000","timestamp":"2026-04-22T12:35:44.157Z"}
+{"level":"info","message":"Server running on http://localhost:5000","timestamp":"2026-04-22T12:35:51.363Z"}
+{"level":"info","message":"Server running on http://localhost:5000","timestamp":"2026-04-22T12:35:59.993Z"}
+{"level":"info","message":"Server running on http://localhost:5000","timestamp":"2026-04-22T12:36:08.696Z"}
+{"level":"info","message":"Server running on http://localhost:5000","timestamp":"2026-04-22T12:36:17.244Z"}
+{"level":"info","message":"Server running on http://localhost:5000","timestamp":"2026-04-22T12:37:18.126Z"}
+{"level":"info","message":"Server running on http://localhost:5000","timestamp":"2026-04-22T12:37:39.704Z"}
+{"level":"info","message":"Server running on http://localhost:5000","timestamp":"2026-04-22T12:37:59.632Z"}
+{"level":"info","message":"Server running on http://localhost:5000","timestamp":"2026-04-22T12:41:15.178Z"}
+{"level":"info","message":"Server running on http://localhost:5000","timestamp":"2026-04-22T12:41:22.097Z"}
+{"level":"info","message":"Server running on http://localhost:5000","timestamp":"2026-04-22T12:41:26.607Z"}
+{"level":"info","message":"Server running on http://localhost:5000","timestamp":"2026-04-22T12:41:30.750Z"}
+{"level":"info","message":"Server running on http://localhost:5000","timestamp":"2026-04-22T12:41:52.083Z"}
+{"level":"info","message":"Server running on http://localhost:5000","timestamp":"2026-04-22T12:42:04.066Z"}
+{"level":"info","message":"Server running on http://localhost:5000","timestamp":"2026-04-22T13:00:25.088Z"}
+{"level":"info","message":"Server running on http://localhost:5000","timestamp":"2026-04-22T13:00:43.962Z"}
+{"level":"info","message":"Server running on http://localhost:5000","timestamp":"2026-04-22T13:00:50.265Z"}
+{"level":"info","message":"Server running on http://localhost:5000","timestamp":"2026-04-22T13:01:07.976Z"}
+{"level":"info","message":"Server running on http://localhost:5000","timestamp":"2026-04-22T13:01:20.973Z"}
+{"level":"info","message":"Server running on http://localhost:5000","timestamp":"2026-04-22T13:01:25.588Z"}
+{"level":"info","message":"Server running on http://localhost:5000","timestamp":"2026-04-22T13:02:00.978Z"}
+{"level":"info","message":{"durationMs":11,"method":"GET","status":200,"url":"/api/health"},"timestamp":"2026-04-22T13:02:27.763Z"}
+{"level":"info","message":{"durationMs":1,"method":"GET","status":404,"url":"/api/unknown-route"},"timestamp":"2026-04-22T13:02:27.778Z"}
+{"level":"info","message":{"durationMs":1,"method":"GET","status":401,"url":"/api/users"},"timestamp":"2026-04-22T13:02:27.785Z"}
+{"level":"info","message":"Server running on http://localhost:5000","timestamp":"2026-04-22T13:09:17.759Z"}
+{"level":"info","message":"Server running on http://localhost:5000","timestamp":"2026-04-22T13:09:26.631Z"}
+{"level":"info","message":"Server running on http://localhost:5000","timestamp":"2026-04-22T13:09:30.981Z"}
+{"level":"info","message":"Server running on http://localhost:5000","timestamp":"2026-04-22T13:09:39.201Z"}
+{"level":"info","message":"Server running on http://localhost:5000","timestamp":"2026-04-22T13:10:02.827Z"}
+{"level":"info","message":{"durationMs":4,"method":"GET","status":200,"url":"/api/health"},"timestamp":"2026-04-22T13:10:10.737Z"}
+{"level":"info","message":{"durationMs":1,"method":"GET","status":404,"url":"/api/unknown-route"},"timestamp":"2026-04-22T13:10:10.750Z"}
+{"level":"info","message":{"durationMs":1,"method":"GET","status":401,"url":"/api/users"},"timestamp":"2026-04-22T13:10:10.757Z"}
+{"level":"info","message":{"durationMs":5,"method":"GET","status":200,"url":"/"},"timestamp":"2026-04-22T13:10:58.341Z"}
+{"level":"info","message":{"durationMs":4,"method":"GET","status":200,"url":"/css/main.css"},"timestamp":"2026-04-22T13:10:58.382Z"}
+{"level":"info","message":{"durationMs":4,"method":"GET","status":200,"url":"/js/ui-utils.js"},"timestamp":"2026-04-22T13:10:58.383Z"}
+{"level":"info","message":{"durationMs":4,"method":"GET","status":200,"url":"/js/app.js"},"timestamp":"2026-04-22T13:10:58.384Z"}
+{"level":"info","message":{"durationMs":4,"method":"GET","status":200,"url":"/js/api.js"},"timestamp":"2026-04-22T13:10:58.385Z"}
+{"level":"info","message":{"durationMs":2,"method":"GET","status":200,"url":"/.well-known/appspecific/com.chrome.devtools.json"},"timestamp":"2026-04-22T13:10:58.391Z"}
+{"level":"info","message":{"durationMs":18,"method":"GET","status":200,"url":"/api/auth/me"},"timestamp":"2026-04-22T13:10:58.457Z"}
+{"level":"info","message":{"durationMs":9,"method":"GET","status":304,"url":"/api/videos"},"timestamp":"2026-04-22T13:10:58.513Z"}
+{"level":"info","message":{"durationMs":18,"method":"GET","status":304,"url":"/api/site-config"},"timestamp":"2026-04-22T13:10:58.524Z"}
+{"level":"info","message":{"durationMs":17,"method":"GET","status":304,"url":"/api/messages/conversations"},"timestamp":"2026-04-22T13:10:58.526Z"}
+{"level":"info","message":{"durationMs":4,"method":"GET","status":304,"url":"/api/users"},"timestamp":"2026-04-22T13:10:58.554Z"}
+{"level":"info","message":{"durationMs":17,"method":"GET","status":200,"url":"/api/messages/conversations/69e7778c5acdb5f7a4e55ccf/messages"},"timestamp":"2026-04-22T13:10:58.598Z"}
+{"level":"info","message":{"durationMs":65,"method":"GET","status":200,"url":"/api/videos/69e764c7536aac054e340dde/lesson"},"timestamp":"2026-04-22T13:11:03.833Z"}
+{"level":"info","message":{"durationMs":8,"method":"PATCH","status":200,"url":"/api/auth/profile"},"timestamp":"2026-04-22T13:11:25.533Z"}
+{"level":"info","message":{"durationMs":16,"method":"GET","status":304,"url":"/api/videos/submissions/overview"},"timestamp":"2026-04-22T13:11:28.988Z"}
+{"level":"info","message":{"durationMs":7,"method":"GET","status":304,"url":"/api/videos/submissions/overview"},"timestamp":"2026-04-22T13:11:43.335Z"}
+{"level":"info","message":{"durationMs":8,"method":"GET","status":304,"url":"/api/videos/submissions/overview"},"timestamp":"2026-04-22T13:11:45.111Z"}
+{"level":"info","message":{"durationMs":7,"method":"GET","status":304,"url":"/api/videos/submissions/overview"},"timestamp":"2026-04-22T13:11:50.320Z"}
+{"level":"info","message":{"durationMs":8,"method":"GET","status":304,"url":"/api/videos/69e79115701066ea5c4a5c02/lesson"},"timestamp":"2026-04-22T13:11:58.799Z"}
+{"level":"info","message":{"durationMs":7,"method":"GET","status":304,"url":"/api/videos/submissions/overview"},"timestamp":"2026-04-22T13:12:03.538Z"}
+{"level":"info","message":"Server running on http://localhost:5000","timestamp":"2026-04-22T13:12:59.807Z"}
+{"level":"info","message":"Server running on http://localhost:5000","timestamp":"2026-04-22T13:13:12.582Z"}
+{"level":"info","message":{"durationMs":106,"method":"POST","status":200,"url":"/api/auth/login"},"timestamp":"2026-04-22T13:13:12.781Z"}
+{"level":"info","message":{"durationMs":21,"method":"GET","status":304,"url":"/api/videos"},"timestamp":"2026-04-22T13:13:12.813Z"}
+{"level":"info","message":{"durationMs":29,"method":"GET","status":304,"url":"/api/site-config"},"timestamp":"2026-04-22T13:13:12.825Z"}
+{"level":"info","message":{"durationMs":29,"method":"GET","status":200,"url":"/api/messages/conversations"},"timestamp":"2026-04-22T13:13:12.829Z"}
+{"level":"info","message":{"durationMs":5,"method":"GET","status":304,"url":"/api/users"},"timestamp":"2026-04-22T13:13:12.839Z"}
+{"level":"info","message":{"durationMs":19,"method":"GET","status":200,"url":"/api/messages/conversations/69e7778c5acdb5f7a4e55ccf/messages"},"timestamp":"2026-04-22T13:13:12.861Z"}
+{"level":"info","message":{"durationMs":22,"method":"GET","status":304,"url":"/api/videos/submissions/overview"},"timestamp":"2026-04-22T13:13:24.011Z"}
+{"level":"info","message":{"durationMs":13,"method":"GET","status":304,"url":"/api/videos/submissions/overview"},"timestamp":"2026-04-22T13:13:49.320Z"}
+{"level":"info","message":{"durationMs":6,"method":"GET","status":304,"url":"/api/videos/submissions/overview"},"timestamp":"2026-04-22T13:14:03.682Z"}
+{"level":"info","message":"Server running on http://localhost:5000","timestamp":"2026-04-22T13:15:00.784Z"}
+{"level":"info","message":{"durationMs":20,"method":"PATCH","status":200,"url":"/api/auth/profile"},"timestamp":"2026-04-22T13:15:11.820Z"}
+{"level":"info","message":{"durationMs":3,"method":"PUT","status":403,"url":"/api/site-config"},"timestamp":"2026-04-22T13:15:11.925Z"}
+{"level":"info","message":{"durationMs":5,"method":"PUT","status":409,"url":"/api/site-config"},"timestamp":"2026-04-22T13:15:12.023Z"}
+{"level":"info","message":{"durationMs":0,"method":"GET","status":200,"url":"/api/health"},"timestamp":"2026-04-22T13:15:12.607Z"}
+{"level":"info","message":{"durationMs":0,"method":"GET","status":404,"url":"/api/unknown-route"},"timestamp":"2026-04-22T13:15:12.613Z"}
+{"level":"info","message":{"durationMs":0,"method":"GET","status":401,"url":"/api/users"},"timestamp":"2026-04-22T13:15:12.618Z"}
+{"level":"info","message":{"durationMs":5,"method":"GET","status":304,"url":"/"},"timestamp":"2026-04-22T13:16:55.726Z"}
+{"level":"info","message":{"durationMs":2,"method":"GET","status":304,"url":"/.well-known/appspecific/com.chrome.devtools.json"},"timestamp":"2026-04-22T13:16:55.752Z"}
+{"level":"info","message":{"durationMs":2,"method":"GET","status":304,"url":"/css/main.css"},"timestamp":"2026-04-22T13:16:55.757Z"}
+{"level":"info","message":{"durationMs":2,"method":"GET","status":304,"url":"/js/api.js"},"timestamp":"2026-04-22T13:16:55.758Z"}
+{"level":"info","message":{"durationMs":3,"method":"GET","status":304,"url":"/js/ui-utils.js"},"timestamp":"2026-04-22T13:16:55.760Z"}
+{"level":"info","message":{"durationMs":2,"method":"GET","status":304,"url":"/js/app.js"},"timestamp":"2026-04-22T13:16:55.761Z"}
+{"level":"info","message":{"durationMs":15,"method":"GET","status":200,"url":"/api/auth/me"},"timestamp":"2026-04-22T13:16:55.832Z"}
+{"level":"info","message":{"durationMs":11,"method":"GET","status":304,"url":"/api/videos"},"timestamp":"2026-04-22T13:16:55.884Z"}
+{"level":"info","message":{"durationMs":18,"method":"GET","status":304,"url":"/api/site-config"},"timestamp":"2026-04-22T13:16:55.892Z"}
+{"level":"info","message":{"durationMs":17,"method":"GET","status":200,"url":"/api/messages/conversations"},"timestamp":"2026-04-22T13:16:55.893Z"}
+{"level":"info","message":{"durationMs":5,"method":"GET","status":304,"url":"/api/users"},"timestamp":"2026-04-22T13:16:55.906Z"}
+{"level":"info","message":{"durationMs":12,"method":"GET","status":200,"url":"/api/messages/conversations/69e7778c5acdb5f7a4e55ccf/messages"},"timestamp":"2026-04-22T13:16:55.943Z"}
+{"level":"info","message":"Server running on http://localhost:5000","timestamp":"2026-04-22T13:19:50.303Z"}
+{"level":"info","message":"Server running on http://localhost:5000","timestamp":"2026-04-22T13:20:21.502Z"}
+{"level":"info","message":"Server running on http://localhost:5000","timestamp":"2026-04-22T13:20:42.983Z"}
+{"level":"info","message":"Server running on http://localhost:5000","timestamp":"2026-04-22T13:20:53.227Z"}
+{"level":"info","message":"Server running on http://localhost:5000","timestamp":"2026-04-22T13:21:12.712Z"}
+{"level":"info","message":"Server running on http://localhost:5000","timestamp":"2026-04-22T13:21:27.021Z"}
+{"level":"info","message":{"durationMs":26,"method":"POST","status":201,"url":"/api/videos"},"timestamp":"2026-04-22T13:21:48.158Z"}
+{"level":"info","message":{"durationMs":11,"method":"GET","status":200,"url":"/api/videos/69e8cb6cbe8cde9ffa05ebf9/lesson"},"timestamp":"2026-04-22T13:21:48.180Z"}
+{"level":"info","message":{"durationMs":16,"method":"POST","status":201,"url":"/api/videos/69e8cb6cbe8cde9ffa05ebf9/submissions"},"timestamp":"2026-04-22T13:21:48.201Z"}
+{"level":"info","message":{"durationMs":8,"method":"PATCH","status":200,"url":"/api/videos/69e8cb6cbe8cde9ffa05ebf9/submissions/69e8cb6cb0548415910bdbeb/grade"},"timestamp":"2026-04-22T13:21:48.213Z"}
+{"level":"info","message":{"durationMs":23,"method":"GET","status":200,"url":"/api/videos/submissions/overview"},"timestamp":"2026-04-22T13:21:48.239Z"}
+{"level":"info","message":{"durationMs":9,"method":"POST","status":201,"url":"/api/videos"},"timestamp":"2026-04-22T13:21:48.340Z"}
+{"level":"info","message":{"durationMs":5,"method":"POST","status":409,"url":"/api/videos"},"timestamp":"2026-04-22T13:21:48.350Z"}
+{"level":"info","message":{"durationMs":10,"method":"PATCH","status":200,"url":"/api/auth/profile"},"timestamp":"2026-04-22T13:21:49.535Z"}
+{"level":"info","message":{"durationMs":2,"method":"PUT","status":403,"url":"/api/site-config"},"timestamp":"2026-04-22T13:21:49.631Z"}
+{"level":"info","message":{"durationMs":4,"method":"PUT","status":409,"url":"/api/site-config"},"timestamp":"2026-04-22T13:21:49.728Z"}
+{"level":"info","message":{"durationMs":0,"method":"GET","status":200,"url":"/api/health"},"timestamp":"2026-04-22T13:21:50.190Z"}
+{"level":"info","message":{"durationMs":0,"method":"GET","status":404,"url":"/api/unknown-route"},"timestamp":"2026-04-22T13:21:50.196Z"}
+{"level":"info","message":{"durationMs":0,"method":"GET","status":401,"url":"/api/users"},"timestamp":"2026-04-22T13:21:50.201Z"}
+{"level":"info","message":{"durationMs":26,"method":"POST","status":201,"url":"/api/videos"},"timestamp":"2026-04-22T13:23:03.076Z"}
+{"level":"info","message":{"durationMs":8,"method":"GET","status":200,"url":"/api/videos/69e8cbb7d343e38e6331b5d9/lesson"},"timestamp":"2026-04-22T13:23:03.095Z"}
+{"level":"info","message":{"durationMs":14,"method":"POST","status":201,"url":"/api/videos/69e8cbb7d343e38e6331b5d9/submissions"},"timestamp":"2026-04-22T13:23:03.115Z"}
+{"level":"info","message":{"durationMs":7,"method":"PATCH","status":200,"url":"/api/videos/69e8cbb7d343e38e6331b5d9/submissions/69e8cbb7b7f531a77b3aac9f/grade"},"timestamp":"2026-04-22T13:23:03.127Z"}
+{"level":"info","message":{"durationMs":17,"method":"GET","status":200,"url":"/api/videos/submissions/overview"},"timestamp":"2026-04-22T13:23:03.149Z"}
+{"level":"info","message":{"durationMs":7,"method":"POST","status":201,"url":"/api/videos"},"timestamp":"2026-04-22T13:23:03.252Z"}
+{"level":"info","message":{"durationMs":4,"method":"POST","status":409,"url":"/api/videos"},"timestamp":"2026-04-22T13:23:03.260Z"}
+{"level":"info","message":{"durationMs":10,"method":"PATCH","status":200,"url":"/api/auth/profile"},"timestamp":"2026-04-22T13:23:04.352Z"}
+{"level":"info","message":{"durationMs":2,"method":"PUT","status":403,"url":"/api/site-config"},"timestamp":"2026-04-22T13:23:04.449Z"}
+{"level":"info","message":{"durationMs":4,"method":"PUT","status":409,"url":"/api/site-config"},"timestamp":"2026-04-22T13:23:04.542Z"}
+{"level":"info","message":{"durationMs":1,"method":"GET","status":200,"url":"/api/health"},"timestamp":"2026-04-22T13:23:04.988Z"}
+{"level":"info","message":{"durationMs":0,"method":"GET","status":404,"url":"/api/unknown-route"},"timestamp":"2026-04-22T13:23:04.993Z"}
+{"level":"info","message":{"durationMs":0,"method":"GET","status":401,"url":"/api/users"},"timestamp":"2026-04-22T13:23:04.997Z"}
+{"level":"info","message":{"durationMs":6,"method":"GET","status":200,"url":"/"},"timestamp":"2026-04-22T13:23:48.519Z"}
+{"level":"info","message":{"durationMs":3,"method":"GET","status":200,"url":"/.well-known/appspecific/com.chrome.devtools.json"},"timestamp":"2026-04-22T13:23:48.546Z"}
+{"level":"info","message":{"durationMs":1,"method":"GET","status":304,"url":"/css/main.css"},"timestamp":"2026-04-22T13:23:48.551Z"}
+{"level":"info","message":{"durationMs":1,"method":"GET","status":304,"url":"/js/api.js"},"timestamp":"2026-04-22T13:23:48.554Z"}
+{"level":"info","message":{"durationMs":3,"method":"GET","status":304,"url":"/js/ui-utils.js"},"timestamp":"2026-04-22T13:23:48.556Z"}
+{"level":"info","message":{"durationMs":5,"method":"GET","status":200,"url":"/js/profile-module.js"},"timestamp":"2026-04-22T13:23:48.559Z"}
+{"level":"info","message":{"durationMs":3,"method":"GET","status":200,"url":"/js/app.js"},"timestamp":"2026-04-22T13:23:48.561Z"}
+{"level":"info","message":{"durationMs":18,"method":"GET","status":304,"url":"/api/auth/me"},"timestamp":"2026-04-22T13:23:48.637Z"}
+{"level":"info","message":{"durationMs":11,"method":"GET","status":304,"url":"/api/videos"},"timestamp":"2026-04-22T13:23:48.676Z"}
+{"level":"info","message":{"durationMs":18,"method":"GET","status":304,"url":"/api/site-config"},"timestamp":"2026-04-22T13:23:48.685Z"}
+{"level":"info","message":{"durationMs":19,"method":"GET","status":200,"url":"/api/messages/conversations"},"timestamp":"2026-04-22T13:23:48.687Z"}
+{"level":"info","message":{"durationMs":5,"method":"GET","status":304,"url":"/api/users"},"timestamp":"2026-04-22T13:23:48.775Z"}
+{"level":"info","message":{"durationMs":12,"method":"GET","status":200,"url":"/api/messages/conversations/69e7778c5acdb5f7a4e55ccf/messages"},"timestamp":"2026-04-22T13:23:48.790Z"}
+{"level":"info","message":{"durationMs":16,"method":"GET","status":304,"url":"/api/videos/submissions/overview"},"timestamp":"2026-04-22T13:23:55.732Z"}
+{"level":"info","message":"Server running on http://localhost:5000","timestamp":"2026-04-22T13:25:15.167Z"}
+{"level":"info","message":{"durationMs":5,"method":"GET","status":200,"url":"/"},"timestamp":"2026-04-22T13:25:23.850Z"}
+{"level":"info","message":{"durationMs":3,"method":"GET","status":200,"url":"/.well-known/appspecific/com.chrome.devtools.json"},"timestamp":"2026-04-22T13:25:23.869Z"}
+{"level":"info","message":{"durationMs":1,"method":"GET","status":304,"url":"/js/api.js"},"timestamp":"2026-04-22T13:25:23.876Z"}
+{"level":"info","message":{"durationMs":4,"method":"GET","status":200,"url":"/css/main.css"},"timestamp":"2026-04-22T13:25:23.878Z"}
+{"level":"info","message":{"durationMs":3,"method":"GET","status":304,"url":"/js/ui-utils.js"},"timestamp":"2026-04-22T13:25:23.880Z"}
+{"level":"info","message":{"durationMs":2,"method":"GET","status":304,"url":"/js/profile-module.js"},"timestamp":"2026-04-22T13:25:23.881Z"}
+{"level":"info","message":{"durationMs":3,"method":"GET","status":200,"url":"/js/app.js"},"timestamp":"2026-04-22T13:25:23.882Z"}
+{"level":"info","message":"Server running on http://localhost:5000","timestamp":"2026-04-22T13:27:32.651Z"}
+{"level":"info","message":{"durationMs":6,"method":"GET","status":200,"url":"/"},"timestamp":"2026-04-22T13:27:46.612Z"}
+{"level":"info","message":{"durationMs":2,"method":"GET","status":200,"url":"/.well-known/appspecific/com.chrome.devtools.json"},"timestamp":"2026-04-22T13:27:46.637Z"}
+{"level":"info","message":{"durationMs":1,"method":"GET","status":200,"url":"/css/main.css"},"timestamp":"2026-04-22T13:27:46.643Z"}
+{"level":"info","message":{"durationMs":1,"method":"GET","status":304,"url":"/js/api.js"},"timestamp":"2026-04-22T13:27:46.647Z"}
+{"level":"info","message":{"durationMs":2,"method":"GET","status":304,"url":"/js/ui-utils.js"},"timestamp":"2026-04-22T13:27:46.648Z"}
+{"level":"info","message":{"durationMs":3,"method":"GET","status":304,"url":"/js/profile-module.js"},"timestamp":"2026-04-22T13:27:46.649Z"}
+{"level":"info","message":{"durationMs":2,"method":"GET","status":200,"url":"/js/app.js"},"timestamp":"2026-04-22T13:27:46.652Z"}
+{"level":"info","message":{"durationMs":97,"method":"POST","status":200,"url":"/api/auth/login"},"timestamp":"2026-04-22T13:28:08.162Z"}
+{"level":"info","message":{"durationMs":12,"method":"GET","status":304,"url":"/api/videos"},"timestamp":"2026-04-22T13:28:08.182Z"}
+{"level":"info","message":{"durationMs":19,"method":"GET","status":304,"url":"/api/site-config"},"timestamp":"2026-04-22T13:28:08.193Z"}
+{"level":"info","message":{"durationMs":24,"method":"GET","status":200,"url":"/api/messages/conversations"},"timestamp":"2026-04-22T13:28:08.203Z"}
+{"level":"info","message":{"durationMs":6,"method":"GET","status":304,"url":"/api/users"},"timestamp":"2026-04-22T13:28:08.219Z"}
+{"level":"info","message":{"durationMs":13,"method":"GET","status":200,"url":"/api/messages/conversations/69e7778c5acdb5f7a4e55ccf/messages"},"timestamp":"2026-04-22T13:28:08.239Z"}
+{"level":"info","message":{"durationMs":15,"method":"GET","status":304,"url":"/api/videos/submissions/overview"},"timestamp":"2026-04-22T13:28:28.679Z"}
+{"level":"info","message":{"durationMs":105,"method":"POST","status":401,"url":"/api/auth/login"},"timestamp":"2026-04-22T13:28:35.764Z"}
+{"level":"info","message":{"durationMs":106,"method":"POST","status":200,"url":"/api/auth/login"},"timestamp":"2026-04-22T13:28:40.899Z"}
+{"level":"info","message":{"durationMs":9,"method":"GET","status":304,"url":"/api/videos"},"timestamp":"2026-04-22T13:28:40.915Z"}
+{"level":"info","message":{"durationMs":36,"method":"GET","status":304,"url":"/api/site-config"},"timestamp":"2026-04-22T13:28:40.944Z"}
+{"level":"info","message":{"durationMs":40,"method":"GET","status":200,"url":"/api/videos/progress/me"},"timestamp":"2026-04-22T13:28:40.947Z"}
+{"level":"info","message":{"durationMs":40,"method":"GET","status":200,"url":"/api/messages/conversations"},"timestamp":"2026-04-22T13:28:40.949Z"}
+{"level":"info","message":{"durationMs":7,"method":"GET","status":200,"url":"/api/messages/conversations/69e769fea38f8540e88f4de7/messages"},"timestamp":"2026-04-22T13:28:40.961Z"}
+{"level":"info","message":{"durationMs":1,"method":"GET","status":304,"url":"/"},"timestamp":"2026-04-22T13:28:45.865Z"}
+{"level":"info","message":{"durationMs":2,"method":"GET","status":304,"url":"/.well-known/appspecific/com.chrome.devtools.json"},"timestamp":"2026-04-22T13:28:45.893Z"}
+{"level":"info","message":{"durationMs":1,"method":"GET","status":304,"url":"/css/main.css"},"timestamp":"2026-04-22T13:28:45.898Z"}
+{"level":"info","message":{"durationMs":2,"method":"GET","status":304,"url":"/js/api.js"},"timestamp":"2026-04-22T13:28:45.899Z"}
+{"level":"info","message":{"durationMs":1,"method":"GET","status":304,"url":"/js/ui-utils.js"},"timestamp":"2026-04-22T13:28:45.900Z"}
+{"level":"info","message":{"durationMs":1,"method":"GET","status":304,"url":"/js/profile-module.js"},"timestamp":"2026-04-22T13:28:45.901Z"}
+{"level":"info","message":{"durationMs":1,"method":"GET","status":304,"url":"/js/app.js"},"timestamp":"2026-04-22T13:28:45.902Z"}
+{"level":"info","message":{"durationMs":2,"method":"GET","status":200,"url":"/api/auth/me"},"timestamp":"2026-04-22T13:28:45.933Z"}
+{"level":"info","message":{"durationMs":8,"method":"GET","status":304,"url":"/api/videos"},"timestamp":"2026-04-22T13:28:45.988Z"}
+{"level":"info","message":{"durationMs":11,"method":"GET","status":304,"url":"/api/site-config"},"timestamp":"2026-04-22T13:28:45.992Z"}
+{"level":"info","message":{"durationMs":12,"method":"GET","status":200,"url":"/api/messages/conversations"},"timestamp":"2026-04-22T13:28:45.994Z"}
+{"level":"info","message":{"durationMs":11,"method":"GET","status":304,"url":"/api/videos/progress/me"},"timestamp":"2026-04-22T13:28:45.997Z"}
+{"level":"info","message":{"durationMs":6,"method":"GET","status":200,"url":"/api/messages/conversations/69e769fea38f8540e88f4de7/messages"},"timestamp":"2026-04-22T13:28:46.027Z"}
+{"level":"info","message":{"durationMs":1,"method":"GET","status":200,"url":"/"},"timestamp":"2026-04-22T13:30:34.362Z"}
+{"level":"info","message":{"durationMs":3,"method":"GET","status":200,"url":"/.well-known/appspecific/com.chrome.devtools.json"},"timestamp":"2026-04-22T13:30:34.390Z"}
+{"level":"info","message":{"durationMs":0,"method":"GET","status":304,"url":"/css/main.css"},"timestamp":"2026-04-22T13:30:34.393Z"}
+{"level":"info","message":{"durationMs":1,"method":"GET","status":304,"url":"/js/ui-utils.js"},"timestamp":"2026-04-22T13:30:34.396Z"}
+{"level":"info","message":{"durationMs":2,"method":"GET","status":304,"url":"/js/profile-module.js"},"timestamp":"2026-04-22T13:30:34.397Z"}
+{"level":"info","message":{"durationMs":4,"method":"GET","status":304,"url":"/js/api.js"},"timestamp":"2026-04-22T13:30:34.398Z"}
+{"level":"info","message":{"durationMs":4,"method":"GET","status":304,"url":"/js/app.js"},"timestamp":"2026-04-22T13:30:34.399Z"}
+{"level":"info","message":{"durationMs":4,"method":"GET","status":304,"url":"/api/auth/me"},"timestamp":"2026-04-22T13:30:34.440Z"}
+{"level":"info","message":{"durationMs":9,"method":"GET","status":304,"url":"/api/videos"},"timestamp":"2026-04-22T13:30:34.469Z"}
+{"level":"info","message":{"durationMs":11,"method":"GET","status":304,"url":"/api/site-config"},"timestamp":"2026-04-22T13:30:34.472Z"}
+{"level":"info","message":{"durationMs":12,"method":"GET","status":200,"url":"/api/messages/conversations"},"timestamp":"2026-04-22T13:30:34.474Z"}
+{"level":"info","message":{"durationMs":13,"method":"GET","status":304,"url":"/api/videos/progress/me"},"timestamp":"2026-04-22T13:30:34.476Z"}
+{"level":"info","message":{"durationMs":7,"method":"GET","status":200,"url":"/api/messages/conversations/69e769fea38f8540e88f4de7/messages"},"timestamp":"2026-04-22T13:30:34.521Z"}
+{"level":"info","message":{"durationMs":1,"method":"GET","status":200,"url":"/"},"timestamp":"2026-04-22T13:31:27.320Z"}
+{"level":"info","message":{"durationMs":2,"method":"GET","status":200,"url":"/.well-known/appspecific/com.chrome.devtools.json"},"timestamp":"2026-04-22T13:31:27.343Z"}
+{"level":"info","message":{"durationMs":1,"method":"GET","status":304,"url":"/css/main.css"},"timestamp":"2026-04-22T13:31:27.350Z"}
+{"level":"info","message":{"durationMs":1,"method":"GET","status":304,"url":"/js/api.js"},"timestamp":"2026-04-22T13:31:27.350Z"}
+{"level":"info","message":{"durationMs":1,"method":"GET","status":304,"url":"/js/ui-utils.js"},"timestamp":"2026-04-22T13:31:27.353Z"}
+{"level":"info","message":{"durationMs":2,"method":"GET","status":304,"url":"/js/profile-module.js"},"timestamp":"2026-04-22T13:31:27.354Z"}
+{"level":"info","message":{"durationMs":0,"method":"GET","status":304,"url":"/js/app.js"},"timestamp":"2026-04-22T13:31:27.355Z"}
+{"level":"info","message":{"durationMs":2,"method":"GET","status":304,"url":"/api/auth/me"},"timestamp":"2026-04-22T13:31:27.403Z"}
+{"level":"info","message":{"durationMs":9,"method":"GET","status":304,"url":"/api/videos"},"timestamp":"2026-04-22T13:31:27.462Z"}
+{"level":"info","message":{"durationMs":11,"method":"GET","status":304,"url":"/api/site-config"},"timestamp":"2026-04-22T13:31:27.466Z"}
+{"level":"info","message":{"durationMs":11,"method":"GET","status":200,"url":"/api/messages/conversations"},"timestamp":"2026-04-22T13:31:27.467Z"}
+{"level":"info","message":{"durationMs":11,"method":"GET","status":304,"url":"/api/videos/progress/me"},"timestamp":"2026-04-22T13:31:27.468Z"}
+{"level":"info","message":{"durationMs":5,"method":"GET","status":200,"url":"/api/messages/conversations/69e769fea38f8540e88f4de7/messages"},"timestamp":"2026-04-22T13:31:27.500Z"}
+{"level":"info","message":{"durationMs":109,"method":"POST","status":200,"url":"/api/auth/login"},"timestamp":"2026-04-22T13:31:48.499Z"}
+{"level":"info","message":{"durationMs":7,"method":"GET","status":304,"url":"/api/videos"},"timestamp":"2026-04-22T13:31:48.512Z"}
+{"level":"info","message":{"durationMs":10,"method":"GET","status":304,"url":"/api/site-config"},"timestamp":"2026-04-22T13:31:48.516Z"}
+{"level":"info","message":{"durationMs":10,"method":"GET","status":200,"url":"/api/messages/conversations"},"timestamp":"2026-04-22T13:31:48.517Z"}
+{"level":"info","message":{"durationMs":5,"method":"GET","status":304,"url":"/api/users"},"timestamp":"2026-04-22T13:31:48.527Z"}
+{"level":"info","message":{"durationMs":7,"method":"GET","status":200,"url":"/api/messages/conversations/69e7778c5acdb5f7a4e55ccf/messages"},"timestamp":"2026-04-22T13:31:48.538Z"}
+{"level":"info","message":{"durationMs":9,"method":"GET","status":304,"url":"/api/videos/submissions/overview"},"timestamp":"2026-04-22T13:31:52.561Z"}
+{"level":"info","message":{"durationMs":102,"method":"POST","status":200,"url":"/api/auth/login"},"timestamp":"2026-04-22T13:32:48.493Z"}
+{"level":"info","message":{"durationMs":9,"method":"GET","status":304,"url":"/api/videos"},"timestamp":"2026-04-22T13:32:48.506Z"}
+{"level":"info","message":{"durationMs":11,"method":"GET","status":304,"url":"/api/site-config"},"timestamp":"2026-04-22T13:32:48.510Z"}
+{"level":"info","message":{"durationMs":11,"method":"GET","status":200,"url":"/api/messages/conversations"},"timestamp":"2026-04-22T13:32:48.511Z"}
+{"level":"info","message":{"durationMs":11,"method":"GET","status":304,"url":"/api/videos/progress/me"},"timestamp":"2026-04-22T13:32:48.512Z"}
+{"level":"info","message":{"durationMs":7,"method":"GET","status":200,"url":"/api/messages/conversations/69e769fea38f8540e88f4de7/messages"},"timestamp":"2026-04-22T13:32:48.524Z"}
+{"level":"info","message":{"durationMs":1,"method":"GET","status":304,"url":"/"},"timestamp":"2026-04-22T13:32:51.510Z"}
+{"level":"info","message":{"durationMs":1,"method":"GET","status":304,"url":"/.well-known/appspecific/com.chrome.devtools.json"},"timestamp":"2026-04-22T13:32:51.534Z"}
+{"level":"info","message":{"durationMs":1,"method":"GET","status":304,"url":"/css/main.css"},"timestamp":"2026-04-22T13:32:51.539Z"}
+{"level":"info","message":{"durationMs":1,"method":"GET","status":304,"url":"/js/api.js"},"timestamp":"2026-04-22T13:32:51.540Z"}
+{"level":"info","message":{"durationMs":1,"method":"GET","status":304,"url":"/js/ui-utils.js"},"timestamp":"2026-04-22T13:32:51.542Z"}
+{"level":"info","message":{"durationMs":1,"method":"GET","status":304,"url":"/js/profile-module.js"},"timestamp":"2026-04-22T13:32:51.542Z"}
+{"level":"info","message":{"durationMs":1,"method":"GET","status":304,"url":"/js/app.js"},"timestamp":"2026-04-22T13:32:51.543Z"}
+{"level":"info","message":{"durationMs":2,"method":"GET","status":304,"url":"/api/auth/me"},"timestamp":"2026-04-22T13:32:51.586Z"}
+{"level":"info","message":{"durationMs":5,"method":"GET","status":304,"url":"/api/videos"},"timestamp":"2026-04-22T13:32:51.637Z"}
+{"level":"info","message":{"durationMs":9,"method":"GET","status":304,"url":"/api/site-config"},"timestamp":"2026-04-22T13:32:51.647Z"}
+{"level":"info","message":{"durationMs":9,"method":"GET","status":200,"url":"/api/messages/conversations"},"timestamp":"2026-04-22T13:32:51.648Z"}
+{"level":"info","message":{"durationMs":8,"method":"GET","status":304,"url":"/api/videos/progress/me"},"timestamp":"2026-04-22T13:32:51.649Z"}
+{"level":"info","message":{"durationMs":5,"method":"GET","status":200,"url":"/api/messages/conversations/69e769fea38f8540e88f4de7/messages"},"timestamp":"2026-04-22T13:32:51.688Z"}
+{"level":"info","message":"Server running on http://localhost:5000","timestamp":"2026-04-22T13:34:16.845Z"}
+{"level":"info","message":"Server running on http://localhost:5000","timestamp":"2026-04-22T13:34:32.499Z"}
+{"level":"info","message":"Server running on http://localhost:5000","timestamp":"2026-04-22T13:34:51.460Z"}
+{"level":"info","message":{"durationMs":113,"method":"POST","status":200,"url":"/api/auth/login"},"timestamp":"2026-04-22T13:35:18.565Z"}
+{"level":"info","message":{"durationMs":16,"method":"GET","status":304,"url":"/api/videos"},"timestamp":"2026-04-22T13:35:18.591Z"}
+{"level":"info","message":{"durationMs":20,"method":"GET","status":304,"url":"/api/site-config"},"timestamp":"2026-04-22T13:35:18.599Z"}
+{"level":"info","message":{"durationMs":20,"method":"GET","status":200,"url":"/api/messages/conversations"},"timestamp":"2026-04-22T13:35:18.601Z"}
+{"level":"info","message":{"durationMs":4,"method":"GET","status":304,"url":"/api/users"},"timestamp":"2026-04-22T13:35:18.610Z"}
+{"level":"info","message":{"durationMs":16,"method":"GET","status":200,"url":"/api/messages/conversations/69e7778c5acdb5f7a4e55ccf/messages"},"timestamp":"2026-04-22T13:35:18.631Z"}
+{"level":"info","message":{"durationMs":3,"method":"GET","status":304,"url":"/"},"timestamp":"2026-04-22T13:35:21.681Z"}
+{"level":"info","message":{"durationMs":2,"method":"GET","status":304,"url":"/.well-known/appspecific/com.chrome.devtools.json"},"timestamp":"2026-04-22T13:35:21.704Z"}
+{"level":"info","message":{"durationMs":3,"method":"GET","status":304,"url":"/css/main.css"},"timestamp":"2026-04-22T13:35:21.717Z"}
+{"level":"info","message":{"durationMs":4,"method":"GET","status":304,"url":"/js/api.js"},"timestamp":"2026-04-22T13:35:21.719Z"}
+{"level":"info","message":{"durationMs":5,"method":"GET","status":304,"url":"/js/ui-utils.js"},"timestamp":"2026-04-22T13:35:21.721Z"}
+{"level":"info","message":{"durationMs":2,"method":"GET","status":304,"url":"/js/profile-module.js"},"timestamp":"2026-04-22T13:35:21.722Z"}
+{"level":"info","message":{"durationMs":4,"method":"GET","status":200,"url":"/js/app.js"},"timestamp":"2026-04-22T13:35:21.724Z"}
+{"level":"info","message":{"durationMs":4,"method":"GET","status":200,"url":"/api/auth/me"},"timestamp":"2026-04-22T13:35:21.770Z"}
+{"level":"info","message":{"durationMs":9,"method":"GET","status":304,"url":"/api/videos"},"timestamp":"2026-04-22T13:35:21.825Z"}
+{"level":"info","message":{"durationMs":13,"method":"GET","status":304,"url":"/api/site-config"},"timestamp":"2026-04-22T13:35:21.830Z"}
+{"level":"info","message":{"durationMs":13,"method":"GET","status":200,"url":"/api/messages/conversations"},"timestamp":"2026-04-22T13:35:21.832Z"}
+{"level":"info","message":{"durationMs":4,"method":"GET","status":304,"url":"/api/users"},"timestamp":"2026-04-22T13:35:21.851Z"}
+{"level":"info","message":{"durationMs":7,"method":"GET","status":200,"url":"/api/messages/conversations/69e7778c5acdb5f7a4e55ccf/messages"},"timestamp":"2026-04-22T13:35:21.873Z"}
+{"level":"info","message":"Server running on http://localhost:5000","timestamp":"2026-04-22T13:37:35.035Z"}
+{"level":"info","message":{"durationMs":3,"method":"GET","status":304,"url":"/"},"timestamp":"2026-04-22T13:37:55.246Z"}
+{"level":"info","message":{"durationMs":2,"method":"GET","status":304,"url":"/.well-known/appspecific/com.chrome.devtools.json"},"timestamp":"2026-04-22T13:37:55.271Z"}
+{"level":"info","message":{"durationMs":1,"method":"GET","status":304,"url":"/css/main.css"},"timestamp":"2026-04-22T13:37:55.277Z"}
+{"level":"info","message":{"durationMs":2,"method":"GET","status":304,"url":"/js/api.js"},"timestamp":"2026-04-22T13:37:55.278Z"}
+{"level":"info","message":{"durationMs":2,"method":"GET","status":304,"url":"/js/profile-module.js"},"timestamp":"2026-04-22T13:37:55.281Z"}
+{"level":"info","message":{"durationMs":1,"method":"GET","status":304,"url":"/js/ui-utils.js"},"timestamp":"2026-04-22T13:37:55.281Z"}
+{"level":"info","message":{"durationMs":3,"method":"GET","status":200,"url":"/js/app.js"},"timestamp":"2026-04-22T13:37:55.285Z"}
+{"level":"info","message":{"durationMs":17,"method":"GET","status":304,"url":"/api/auth/me"},"timestamp":"2026-04-22T13:37:55.344Z"}
+{"level":"info","message":{"durationMs":11,"method":"GET","status":304,"url":"/api/videos"},"timestamp":"2026-04-22T13:37:55.385Z"}
+{"level":"info","message":{"durationMs":17,"method":"GET","status":304,"url":"/api/site-config"},"timestamp":"2026-04-22T13:37:55.393Z"}
+{"level":"info","message":{"durationMs":17,"method":"GET","status":200,"url":"/api/messages/conversations"},"timestamp":"2026-04-22T13:37:55.395Z"}
+{"level":"info","message":{"durationMs":5,"method":"GET","status":304,"url":"/api/users"},"timestamp":"2026-04-22T13:37:55.418Z"}
+{"level":"info","message":{"durationMs":16,"method":"GET","status":200,"url":"/api/messages/conversations/69e7778c5acdb5f7a4e55ccf/messages"},"timestamp":"2026-04-22T13:37:55.471Z"}
+{"level":"info","message":{"durationMs":1,"method":"GET","status":304,"url":"/"},"timestamp":"2026-04-22T13:38:53.515Z"}
+{"level":"info","message":{"durationMs":1,"method":"GET","status":304,"url":"/.well-known/appspecific/com.chrome.devtools.json"},"timestamp":"2026-04-22T13:38:53.538Z"}
+{"level":"info","message":{"durationMs":1,"method":"GET","status":304,"url":"/css/main.css"},"timestamp":"2026-04-22T13:38:53.545Z"}
+{"level":"info","message":{"durationMs":2,"method":"GET","status":304,"url":"/js/api.js"},"timestamp":"2026-04-22T13:38:53.546Z"}
+{"level":"info","message":{"durationMs":1,"method":"GET","status":304,"url":"/js/ui-utils.js"},"timestamp":"2026-04-22T13:38:53.548Z"}
+{"level":"info","message":{"durationMs":2,"method":"GET","status":304,"url":"/js/profile-module.js"},"timestamp":"2026-04-22T13:38:53.549Z"}
+{"level":"info","message":{"durationMs":1,"method":"GET","status":304,"url":"/js/app.js"},"timestamp":"2026-04-22T13:38:53.550Z"}
+{"level":"info","message":{"durationMs":4,"method":"GET","status":304,"url":"/api/auth/me"},"timestamp":"2026-04-22T13:38:53.598Z"}
+{"level":"info","message":{"durationMs":12,"method":"GET","status":304,"url":"/api/videos"},"timestamp":"2026-04-22T13:38:53.654Z"}
+{"level":"info","message":{"durationMs":13,"method":"GET","status":304,"url":"/api/site-config"},"timestamp":"2026-04-22T13:38:53.657Z"}
+{"level":"info","message":{"durationMs":12,"method":"GET","status":200,"url":"/api/messages/conversations"},"timestamp":"2026-04-22T13:38:53.658Z"}
+{"level":"info","message":{"durationMs":4,"method":"GET","status":304,"url":"/api/users"},"timestamp":"2026-04-22T13:38:53.685Z"}
+{"level":"info","message":{"durationMs":7,"method":"GET","status":200,"url":"/api/messages/conversations/69e7778c5acdb5f7a4e55ccf/messages"},"timestamp":"2026-04-22T13:38:53.757Z"}
+{"level":"info","message":{"durationMs":17,"method":"GET","status":304,"url":"/api/videos/submissions/overview"},"timestamp":"2026-04-22T13:39:21.035Z"}

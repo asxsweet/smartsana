@@ -7,6 +7,10 @@ const userSchema = new mongoose.Schema(
     passwordHash: { type: String, required: true },
     role: { type: String, enum: ["student", "teacher"], default: "student" },
     className: { type: String, default: "" },
+    bio: { type: String, default: "" },
+    phone: { type: String, default: "" },
+    location: { type: String, default: "" },
+    avatarUrl: { type: String, default: "" },
   },
   { timestamps: true }
 );

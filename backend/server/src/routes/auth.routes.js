@@ -22,6 +22,20 @@ const loginSchema = z.object({
   password: z.string().min(1),
 });
 
+const updateProfileSchema = z.object({
+  name: z.string().min(2).optional(),
+  className: z.string().optional(),
+  bio: z.string().max(500).optional(),
+  phone: z.string().max(50).optional(),
+  location: z.string().max(120).optional(),
+  avatarUrl: z.string().max(5 * 1024 * 1024).optional(),
+});
+
+const changePasswordSchema = z.object({
+  currentPassword: z.string().min(1),
+  newPassword: z.string().min(6),
+});
+
 function signToken(user) {
   return jwt.sign({ sub: user._id.toString(), role: user.role }, env.jwtSecret, { expiresIn: "7d" });
 }
@@ -33,6 +47,10 @@ function toUserResponse(user) {
     email: user.email,
     role: user.role,
     className: user.className || "",
+    bio: user.bio || "",
+    phone: user.phone || "",
+    location: user.location || "",
+    avatarUrl: user.avatarUrl || "",
     createdAt: user.createdAt,
   };
 }
@@ -120,6 +138,39 @@ router.post("/login", async (req, res) => {
 
 router.get("/me", requireAuth, async (req, res) => {
   return res.json({ user: toUserResponse(req.user) });
+});
+
+router.patch("/profile", requireAuth, async (req, res) => {
+  const parsed = updateProfileSchema.safeParse(req.body);
+  if (!parsed.success) {
+    return res.status(400).json({ message: "Invalid request", issues: parsed.error.flatten() });
+  }
+  const updates = parsed.data;
+  if (typeof updates.name === "string") req.user.name = updates.name.trim();
+  if (typeof updates.bio === "string") req.user.bio = updates.bio.trim();
+  if (typeof updates.phone === "string") req.user.phone = updates.phone.trim();
+  if (typeof updates.location === "string") req.user.location = updates.location.trim();
+  if (typeof updates.avatarUrl === "string") req.user.avatarUrl = updates.avatarUrl.trim();
+  if (typeof updates.className === "string" && req.user.role === "student") {
+    req.user.className = updates.className.trim();
+  }
+  await req.user.save();
+  return res.json({ user: toUserResponse(req.user) });
+});
+
+router.patch("/password", requireAuth, async (req, res) => {
+  const parsed = changePasswordSchema.safeParse(req.body);
+  if (!parsed.success) {
+    return res.status(400).json({ message: "Invalid request", issues: parsed.error.flatten() });
+  }
+  const { currentPassword, newPassword } = parsed.data;
+  const ok = await verifyPasswordAndMigrate(req.user, currentPassword);
+  if (!ok) {
+    return res.status(400).json({ message: "Ағымдағы құпиясөз қате" });
+  }
+  req.user.passwordHash = await bcrypt.hash(newPassword, 10);
+  await req.user.save();
+  return res.json({ ok: true });
 });
 
 module.exports = router;

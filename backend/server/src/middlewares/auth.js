@@ -11,7 +11,7 @@ async function requireAuth(req, res, next) {
     }
 
     const payload = jwt.verify(token, env.jwtSecret);
-    const user = await User.findById(payload.sub).lean();
+    const user = await User.findById(payload.sub);
     if (!user) {
       return res.status(401).json({ message: "Unauthorized" });
     }

@@ -9,6 +9,7 @@ const statsRoutes = require("./routes/stats.routes");
 const aiRoutes = require("./routes/ai.routes");
 const siteConfigRoutes = require("./routes/site-config.routes");
 const { env } = require("./config/env");
+const { logger } = require("./logger");
 
 const app = express();
 
@@ -27,6 +28,21 @@ app.use(cors({
   },
 }));
 app.use(express.json({ limit: "15mb" }));
+app.use((req, _res, next) => {
+  req.requestStartedAt = Date.now();
+  next();
+});
+app.use((req, res, next) => {
+  res.on("finish", () => {
+    logger.info({
+      method: req.method,
+      url: req.originalUrl,
+      status: res.statusCode,
+      durationMs: Date.now() - (req.requestStartedAt || Date.now()),
+    });
+  });
+  next();
+});
 
 app.get("/api/health", (_req, res) => res.json({ ok: true }));
 app.use("/api/auth", authRoutes);
@@ -37,10 +53,30 @@ app.use("/api/stats", statsRoutes);
 app.use("/api/ai", aiRoutes);
 app.use("/api/site-config", siteConfigRoutes);
 
+app.use("/api", (req, res) => {
+  res.status(404).json({ message: `API route not found: ${req.method} ${req.originalUrl}` });
+});
+
 const rootDir = path.resolve(__dirname, "..", "..", "..", "frontend");
 app.use(express.static(rootDir));
 app.use((_req, res) => {
   res.sendFile(path.join(rootDir, "index.html"));
+});
+
+app.use((err, req, res, _next) => {
+  const status = err?.status || 500;
+  logger.error({
+    message: err?.message || "Unhandled server error",
+    status,
+    method: req.method,
+    url: req.originalUrl,
+    durationMs: Date.now() - (req.requestStartedAt || Date.now()),
+    stack: err?.stack,
+  });
+  if (res.headersSent) return;
+  res.status(status).json({
+    message: status >= 500 ? "Internal server error" : (err?.message || "Request failed"),
+  });
 });
 
 module.exports = app;

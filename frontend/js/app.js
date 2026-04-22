@@ -4,38 +4,41 @@ let students = [];
 let conversations = [];
 let activeConversationId = null;
 let chatMessages = [];
+let videoProgressById = {};
 let siteConfig = { sensors: [], codes: [], quickQuestions: [] };
 let aiHistory = { q: [] };
 let crudSaveHandler = null;
-let toastTimer = null;
+let profileModule = null;
 const feedbackDefaults = {
   title: document.querySelector("#sec-feedback .sec-title")?.textContent || "Мұғалімге жазу",
   sub: document.querySelector("#sec-feedback .sec-sub")?.textContent || "",
   grid: document.querySelector("#sec-feedback .fb-grid")?.innerHTML || "",
 };
 
-const SYS = 'Сен Arduino және IoT оқу платформасының AI көмекшісісің. Оқушылар мен мұғалімдер қазақша сұрақ қояды, сен де қазақша жауап бер.';
+const SYS = 'Сен Arduino және IoT оқу платформасының AI көмекшісісің. Оқушылар мен мұғалімдер қазақша сұрақ қояды, сен де қазақша жауап бер. Жауаптарың қысқа әрі нақты болсын: артық созба, бірақ мағынасы толық және түсінікті болсын. Қажет болса 3-5 тармақпен бер.';
 
-function showToast(message, type = "success", duration = 3800) {
-  const toast = document.getElementById("toast");
-  if (!toast) return;
-  toast.textContent = message;
-  toast.classList.remove("success", "error", "show");
-  toast.classList.add(type === "error" ? "error" : "success");
-  if (toastTimer) {
-    clearTimeout(toastTimer);
-    toastTimer = null;
+function setHeaderUser(user) {
+  const nameEl = document.getElementById("uName");
+  const avatarEl = document.getElementById("uAvatar");
+  if (nameEl) nameEl.textContent = user?.name || "";
+  if (avatarEl) {
+    if (user?.avatarUrl) {
+      avatarEl.innerHTML = `<img src="${user.avatarUrl}" alt="avatar" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
+    } else {
+      avatarEl.textContent = user?.name?.[0]?.toUpperCase?.() || "";
+    }
   }
-  requestAnimationFrame(() => {
-    toast.classList.add("show");
-  });
-  toastTimer = setTimeout(() => {
-    toast.classList.remove("show");
-  }, duration);
 }
 
-function normalizeText(value) {
-  return String(value || "").trim().toLowerCase();
+function setCurrentUser(user) {
+  currentUser = user;
+}
+
+function getUnreadCount() {
+  if (!currentUser) return 0;
+  return (conversations || []).reduce((sum, c) => {
+    return sum + (currentUser.role === "teacher" ? (c.unreadForTeacher || 0) : (c.unreadForStudent || 0));
+  }, 0);
 }
 
 function switchAuthTab(t) {
@@ -51,6 +54,14 @@ function toggleTeacherRegMode(enabled) {
   if (wrap) wrap.style.display = enabled ? "block" : "none";
   if (roleInput) roleInput.value = enabled ? "teacher" : "student";
   if (classSelect) classSelect.disabled = enabled;
+}
+
+function togglePasswordVisibility(inputId, btn) {
+  const input = document.getElementById(inputId);
+  if (!input) return;
+  const isPassword = input.type === "password";
+  input.type = isPassword ? "text" : "password";
+  if (btn) btn.classList.toggle("is-hidden", !isPassword);
 }
 
 async function doLogin() {
@@ -100,14 +111,9 @@ async function afterLogin(user) {
   currentUser = user;
   document.getElementById('authScreen').style.display = 'none';
   document.getElementById('app').style.display = 'block';
-  document.getElementById('uName').textContent = user.name;
-  document.getElementById('uAvatar').textContent = user.name[0].toUpperCase();
+  setHeaderUser(user);
   document.getElementById('uBadge').textContent = user.role === 'teacher' ? 'Мұғалім' : 'Оқушы';
   buildNav();
-  const qSec = document.getElementById("sec-question");
-  if (qSec && user.role === "teacher") {
-    qSec.remove();
-  }
   await loadData();
   renderAll();
   showSec('home');
@@ -122,10 +128,10 @@ function doLogout() {
 
 function buildNav() {
   const items = [['home', 'Басты'], ['video', 'Видео'], ['sensor', 'Датчиктер'], ['code', 'Код']];
-  if (currentUser.role !== "teacher") {
-    items.push(['question', 'AI Сұрақ']);
-  }
-  items.push(['feedback', currentUser.role === 'teacher' ? 'Хабарламалар' : 'Байланыс']);
+  items.push(['question', 'AI Сұрақ']);
+  const unread = getUnreadCount();
+  const feedbackLabel = currentUser.role === 'teacher' ? 'Хабарламалар' : 'Байланыс';
+  items.push(['feedback', unread > 0 ? `${feedbackLabel} (${unread})` : feedbackLabel]);
   if (currentUser.role === "teacher") {
     items.push(["students", "Студенттер"]);
     items.push(["submissions", "Тапсырмалар"]);
@@ -145,11 +151,19 @@ function showSec(id) {
 }
 
 async function loadData() {
-  const [v, cfg] = await Promise.all([apiRequest('/videos'), apiRequest('/site-config')]);
+  const requests = [apiRequest('/videos'), apiRequest('/site-config'), apiRequest('/messages/conversations')];
+  if (currentUser.role === "student") {
+    requests.push(apiRequest("/videos/progress/me"));
+  }
+  const [v, cfg, c, progressData] = await Promise.all(requests);
   videos = v.videos || [];
   siteConfig = cfg.config || siteConfig;
-  const c = await apiRequest('/messages/conversations');
   conversations = c.conversations || [];
+  const progress = progressData?.progress || [];
+  videoProgressById = progress.reduce((acc, item) => {
+    acc[String(item.videoId)] = item.lastViewedAt;
+    return acc;
+  }, {});
   if (currentUser.role === "teacher") {
     const usersData = await apiRequest("/users");
     students = (usersData.users || []).filter((u) => u.role === "student");
@@ -162,16 +176,32 @@ async function loadData() {
   } else {
     chatMessages = [];
   }
+  buildNav();
 }
 
 function renderAll() {
   renderVideos();
   renderSensors();
   renderCodes();
-  if (currentUser?.role !== "teacher") {
-    renderQuestions();
-  }
+  renderQuestions();
   renderFeedbackSection();
+  renderProfileSection();
+}
+
+function renderProfileSection() {
+  return profileModule?.renderProfileSection();
+}
+
+async function saveProfile(buttonEl) {
+  return profileModule?.saveProfile(buttonEl);
+}
+
+async function previewAvatarFile() {
+  return profileModule?.previewAvatarFile();
+}
+
+async function changePassword(buttonEl) {
+  return profileModule?.changePassword(buttonEl);
 }
 
 function teacherActionBar(section) {
@@ -182,7 +212,13 @@ function teacherActionBar(section) {
 function renderVideos() {
   const canEdit = currentUser?.role === 'teacher';
   const grid = document.getElementById('videoGrid');
-  const cards = videos.map((v) => `<div class="vcard"><div class="vthumb" onclick="${v.url ? `window.open('${v.url}','_blank')` : 'void(0)'}"><div class="vthumb-bg"></div><div class="play-btn"><div class="play-tri"></div></div><div class="vdur">${v.dur || ''}</div></div><div class="vinfo"><div class="vnum">Сабақ ${v.num}</div><div class="vtitle">${v.title}</div><div class="vdesc">${v.desc || ''}</div><div style="display:flex;gap:8px;margin-top:10px;"><button class="cpybtn" onclick="openVideoLesson('${v._id}')">Сабақты ашу</button>${canEdit ? `<button class="cpybtn" onclick="deleteVideo('${v._id}')">Жою</button>` : ''}</div></div></div>`).join('');
+  const cards = videos.map((v) => {
+    const viewedAt = videoProgressById[String(v._id)];
+    const viewedBadge = (!canEdit && viewedAt)
+      ? `<span class="badge b-green" style="margin-left:8px;">Қаралды</span><div class="msg-meta">Соңғы қаралғаны: ${new Date(viewedAt).toLocaleString("kk-KZ")}</div>`
+      : (!canEdit ? `<span class="badge b-red" style="margin-left:8px;">Қаралмады</span>` : "");
+    return `<div class="vcard"><div class="vthumb" onclick="${v.url ? `window.open('${v.url}','_blank')` : 'void(0)'}"><div class="vthumb-bg"></div><div class="play-btn"><div class="play-tri"></div></div><div class="vdur">${v.dur || ''}</div></div><div class="vinfo"><div class="vnum">Сабақ ${v.num}${viewedBadge}</div><div class="vtitle">${v.title}</div><div class="vdesc">${v.desc || ''}</div><div style="display:flex;gap:8px;margin-top:10px;"><button class="cpybtn" onclick="openVideoLesson('${v._id}')">Сабақты ашу</button>${canEdit ? `<button class="cpybtn" onclick="deleteVideo('${v._id}')">Жою</button>` : ''}</div></div></div>`;
+  }).join('');
   const addCard = canEdit ? `<div class="add-card" onclick="addVideoPrompt()"><div style="font-size:32px;">+</div><div>Жаңа видео қосу</div></div>` : '';
   grid.innerHTML = teacherActionBar('Видео сабақтар') + cards + addCard;
 }
@@ -204,7 +240,7 @@ async function addVideoPrompt() {
         (videoUrl && normalizeText(v.url) === videoUrl)
       ));
       if (duplicateVideo) {
-        const shouldContinue = confirm("Бұл видео бұрын қосылған. Қайталап қосқыңыз келе ме?");
+        const shouldContinue = await askConfirm("Бұл видео бұрын қосылған. Қайталап қосқыңыз келе ме?");
         if (!shouldContinue) {
           showToast("Видео қосудан бас тартылды.", "error");
           return;
@@ -226,7 +262,7 @@ async function addVideoPrompt() {
 }
 
 async function deleteVideo(id) {
-  if (!confirm('Жою керек пе?')) return;
+  if (!(await askConfirm("Видеоны жою керек пе?", "Жоюды растау"))) return;
   await apiRequest(`/videos/${id}`, { method: 'DELETE' });
   await loadData();
   renderVideos();
@@ -260,6 +296,9 @@ async function openVideoLesson(videoId) {
           </div>`).join("") || '<div class="empty-state">Жіберілім жоқ</div>'}
       </div>`;
   } else {
+    await apiRequest(`/videos/${videoId}/viewed`, { method: "POST" }).catch(() => null);
+    videoProgressById[String(videoId)] = new Date().toISOString();
+    renderVideos();
     const submission = data.submission;
     bodyEl.innerHTML = `
       <div class="fg"><div class="fl">Видео</div><div class="fi">${video.desc || ""}</div>${video.url ? `<button class="cpybtn" onclick="window.open('${video.url}','_blank')">Видеоны ашу</button>` : ""}</div>
@@ -297,11 +336,11 @@ async function submitVideoTasks(videoId) {
   const maxPerFile = 8 * 1024 * 1024;
   const totalSize = rawFiles.reduce((sum, f) => sum + (f.size || 0), 0);
   if (rawFiles.some((f) => (f.size || 0) > maxPerFile)) {
-    alert("Әр файл көлемі 8MB-тан аспауы керек.");
+    showToast("Әр файл көлемі 8MB-тан аспауы керек.", "error");
     return;
   }
   if (totalSize > 20 * 1024 * 1024) {
-    alert("Файлдардың жалпы көлемі 20MB-тан аспауы керек.");
+    showToast("Файлдардың жалпы көлемі 20MB-тан аспауы керек.", "error");
     return;
   }
   const files = await Promise.all(rawFiles.map(async (file) => ({
@@ -311,11 +350,11 @@ async function submitVideoTasks(videoId) {
     dataUrl: await fileToDataUrl(file),
   })));
   if (!answers.length && !files.length) {
-    alert("Кемінде мәтін жауабын немесе файл жүктеңіз.");
+    showToast("Кемінде мәтін жауабын немесе файл жүктеңіз.", "error");
     return;
   }
   await apiRequest(`/videos/${videoId}/submissions`, { method: "POST", body: JSON.stringify({ answers, files }) });
-  alert("Тапсырма сәтті жіберілді.");
+  showToast("Тапсырма сәтті жіберілді.", "success");
   await openVideoLesson(videoId);
 }
 
@@ -335,7 +374,14 @@ async function renderSubmissionDashboard() {
   if (!root || currentUser?.role !== "teacher") return;
   const data = await apiRequest("/videos/submissions/overview");
   const summary = data.summary || { total: 0, submitted: 0, graded: 0 };
-  const list = data.submissions || [];
+  const searchText = normalizeText(document.getElementById("submissionSearchInput")?.value || "");
+  const sortBy = document.getElementById("submissionSortSelect")?.value || "new";
+  let list = data.submissions || [];
+  if (searchText) {
+    list = list.filter((s) => `${s.studentId?.name || ""} ${s.videoId?.title || ""}`.toLowerCase().includes(searchText));
+  }
+  if (sortBy === "old") list.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+  if (sortBy === "score") list.sort((a, b) => (b.score || 0) - (a.score || 0));
   root.innerHTML = `
     <div class="stats-row" style="margin-bottom:18px;">
       <div class="stat-card"><div class="n">${summary.total}</div><div class="l">Барлығы</div></div>
@@ -358,7 +404,7 @@ async function renderSubmissionDashboard() {
             <button class="cpybtn" onclick="openVideoLesson('${s.videoId?._id}')">Сабаққа өту</button>
           </div>
         </div>
-      `).join("") || '<div class="empty-state">Жіберілген тапсырмалар жоқ</div>'}
+      `).join("") || '<div class="empty-state">Жіберілген тапсырмалар жоқ<br><button class="cpybtn" style="margin-top:10px;" onclick="renderSubmissionDashboard()">Жаңарту</button></div>'}
     </div>
   `;
 }
@@ -368,8 +414,17 @@ function renderStudentsManage() {
   const progressEl = document.getElementById("studentProgressPanel");
   if (!listEl || !progressEl || currentUser?.role !== "teacher") return;
 
-  listEl.innerHTML = students.length
-    ? students.map((s) => `
+  const searchText = normalizeText(document.getElementById("studentSearchInput")?.value || "");
+  const sortBy = document.getElementById("studentSortSelect")?.value || "new";
+  let filtered = [...students];
+  if (searchText) {
+    filtered = filtered.filter((s) => `${s.name} ${s.email} ${s.className || ""}`.toLowerCase().includes(searchText));
+  }
+  if (sortBy === "name") filtered.sort((a, b) => String(a.name || "").localeCompare(String(b.name || ""), "kk"));
+  if (sortBy === "new") filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+  listEl.innerHTML = filtered.length
+    ? filtered.map((s) => `
       <div class="qq">
         <strong>${s.name}</strong><br>
         <span style="font-size:11px;color:var(--text3)">${s.email} ${s.className ? `· ${s.className}` : ""}</span>
@@ -378,7 +433,7 @@ function renderStudentsManage() {
           <button class="cpybtn" onclick="deleteStudent('${s.id}')" style="color:var(--red);border-color:rgba(252,129,129,.3);">Жою</button>
         </div>
       </div>`).join("")
-    : '<div class="empty-state">Студент жоқ</div>';
+    : '<div class="empty-state">Студент жоқ<br><button class="cpybtn" style="margin-top:10px;" onclick="loadData().then(renderStudentsManage)">Қайта жүктеу</button></div>';
 }
 
 async function openStudentProgress(studentId) {
@@ -414,7 +469,7 @@ async function openStudentProgress(studentId) {
 }
 
 async function deleteStudent(studentId) {
-  if (!confirm("Студентті жоясыз ба?")) return;
+  if (!(await askConfirm("Студентті жоясыз ба?", "Жоюды растау"))) return;
   await apiRequest(`/users/${studentId}`, { method: "DELETE" });
   await loadData();
   renderStudentsManage();
@@ -500,7 +555,7 @@ async function addSensorPrompt() {
         (normalizeText(name) && normalizeText(s.name) === normalizeText(name))
       ));
       if (duplicateSensor) {
-        const shouldContinue = confirm("Бұл датчик бұрын қосылған. Қайталап қосқыңыз келе ме?");
+        const shouldContinue = await askConfirm("Бұл датчик бұрын қосылған. Қайталап қосқыңыз келе ме?");
         if (!shouldContinue) {
           showToast("Датчик қосудан бас тартылды.", "error");
           return;
@@ -540,29 +595,11 @@ async function addSensorPrompt() {
 }
 
 async function deleteSensor(index) {
-  if (!confirm("Датчикті жоясыз ба?")) return;
+  if (!(await askConfirm("Датчикті жоясыз ба?", "Жоюды растау"))) return;
   siteConfig.sensors.splice(index, 1);
   await apiRequest('/site-config', { method: 'PUT', body: JSON.stringify(siteConfig) });
   renderSensors();
   showToast("Датчик сәтті жойылды.", "success");
-}
-
-function fileToDataUrl(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(String(reader.result || ""));
-    reader.onerror = () => reject(new Error("Файл оқылмады"));
-    reader.readAsDataURL(file);
-  });
-}
-
-function escapeHtml(value) {
-  return String(value || "")
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
 }
 
 function renderCodes() {
@@ -588,7 +625,7 @@ async function addCodePrompt() {
         (normalizeText(v.code) && normalizeText(c.code) === normalizeText((v.code || '').replace(/</g, '&lt;')))
       ));
       if (duplicateCode) {
-        const shouldContinue = confirm("Бұл код бұрын қосылған. Қайталап қосқыңыз келе ме?");
+        const shouldContinue = await askConfirm("Бұл код бұрын қосылған. Қайталап қосқыңыз келе ме?");
         if (!shouldContinue) {
           showToast("Код қосудан бас тартылды.", "error");
           return;
@@ -620,8 +657,30 @@ function renderQuestions() {
   const quick = (siteConfig.quickQuestions || []).filter((q) => q.type === 'quick');
   const err = (siteConfig.quickQuestions || []).filter((q) => q.type === 'error');
   const cards = document.querySelectorAll('#sec-question .side-card');
-  if (cards[0]) cards[0].innerHTML = `<h4>Жылдам сұрақтар</h4>${quick.map((q) => `<div class="qq" onclick="setQ('${q.prompt.replace(/'/g, "\\'")}')">${q.label}</div>`).join('')}${currentUser?.role === 'teacher' ? '<button class="cpybtn" onclick="addQuickQuestionPrompt()">+ Қосу</button>' : ''}`;
-  if (cards[1]) cards[1].innerHTML = `<h4>Қате шешу</h4>${err.map((q) => `<div class="qq" onclick="setQ('${q.prompt.replace(/'/g, "\\'")}')">${q.label}</div>`).join('')}${currentUser?.role === 'teacher' ? '<button class="cpybtn" onclick="addErrorQuestionPrompt()">+ Қосу</button>' : ''}`;
+  if (cards[0]) {
+    cards[0].innerHTML = `<h4>Жылдам сұрақтар</h4>${quick.map((q) => {
+      const idx = (siteConfig.quickQuestions || []).indexOf(q);
+      const controls = currentUser?.role === 'teacher'
+        ? `<div style="display:flex;gap:6px;margin-top:6px;">
+            <button class="cpybtn" onclick="event.stopPropagation();editQuestionPrompt(${idx})">Өңдеу</button>
+            <button class="cpybtn" onclick="event.stopPropagation();deleteQuestion(${idx})" style="color:var(--red);border-color:rgba(252,129,129,.35);">Жою</button>
+          </div>`
+        : "";
+      return `<div class="qq" onclick="setQ('${q.prompt.replace(/'/g, "\\'")}')">${q.label}${controls}</div>`;
+    }).join('')}${currentUser?.role === 'teacher' ? '<button class="cpybtn" onclick="addQuickQuestionPrompt()">+ Қосу</button>' : ''}`;
+  }
+  if (cards[1]) {
+    cards[1].innerHTML = `<h4>Қате шешу</h4>${err.map((q) => {
+      const idx = (siteConfig.quickQuestions || []).indexOf(q);
+      const controls = currentUser?.role === 'teacher'
+        ? `<div style="display:flex;gap:6px;margin-top:6px;">
+            <button class="cpybtn" onclick="event.stopPropagation();editQuestionPrompt(${idx})">Өңдеу</button>
+            <button class="cpybtn" onclick="event.stopPropagation();deleteQuestion(${idx})" style="color:var(--red);border-color:rgba(252,129,129,.35);">Жою</button>
+          </div>`
+        : "";
+      return `<div class="qq" onclick="setQ('${q.prompt.replace(/'/g, "\\'")}')">${q.label}${controls}</div>`;
+    }).join('')}${currentUser?.role === 'teacher' ? '<button class="cpybtn" onclick="addErrorQuestionPrompt()">+ Қосу</button>' : ''}`;
+  }
 }
 
 async function addQuickQuestionPrompt() {
@@ -644,6 +703,35 @@ async function addErrorQuestionPrompt() {
     await apiRequest('/site-config', { method: 'PUT', body: JSON.stringify(siteConfig) });
     renderQuestions();
   });
+}
+
+async function editQuestionPrompt(index) {
+  const item = (siteConfig.quickQuestions || [])[index];
+  if (!item) return;
+  openCrudModal(item.type === "error" ? "Қате-шешім сұрағын өңдеу" : "Жылдам AI сұрағын өңдеу", [
+    { key: "label", label: "Көрінетін атауы", value: item.label || "" },
+    { key: "prompt", label: "AI-ға жіберілетін текст", value: item.prompt || "", textarea: true },
+  ], async (v) => {
+    if (!v.label || !v.prompt) {
+      showToast("Атауы мен мәтінін толтырыңыз.", "error");
+      return;
+    }
+    siteConfig.quickQuestions[index] = { ...item, label: v.label, prompt: v.prompt };
+    await apiRequest('/site-config', { method: 'PUT', body: JSON.stringify(siteConfig) });
+    renderQuestions();
+    showToast("AI сұрағы жаңартылды.", "success");
+  });
+}
+
+async function deleteQuestion(index) {
+  const item = (siteConfig.quickQuestions || [])[index];
+  if (!item) return;
+  const ok = await askConfirm("Осы AI сұрағын жоясыз ба?", "Жоюды растау");
+  if (!ok) return;
+  siteConfig.quickQuestions.splice(index, 1);
+  await apiRequest('/site-config', { method: 'PUT', body: JSON.stringify(siteConfig) });
+  renderQuestions();
+  showToast("AI сұрағы жойылды.", "success");
 }
 
 async function sendAI() {
@@ -679,12 +767,35 @@ function renderFeedbackSection() {
   const grid = root.querySelector('.fb-grid');
   titleEl.textContent = currentUser?.role === "teacher" ? "Студенттермен чат" : "Мұғаліммен чат";
   subEl.textContent = currentUser?.role === "teacher" ? "Әр студентпен жеке диалог" : "Сұрақ қойып, мұғалімнен кері байланыс алыңыз";
+  const searchInputId = "conversationSearchInput";
+  const sortSelectId = "conversationSortSelect";
+  const searchText = normalizeText(document.getElementById(searchInputId)?.value || "");
+  const sortBy = document.getElementById(sortSelectId)?.value || "new";
+  let filteredConversations = [...conversations];
+  if (searchText) {
+    filteredConversations = filteredConversations.filter((c) => `${c.subject} ${c.studentName || ""} ${c.className || ""}`.toLowerCase().includes(searchText));
+  }
+  if (sortBy === "old") filteredConversations.sort((a, b) => new Date(a.lastMessageAt) - new Date(b.lastMessageAt));
+  if (sortBy === "unread") filteredConversations.sort((a, b) => (currentUser?.role === "teacher" ? (b.unreadForTeacher || 0) - (a.unreadForTeacher || 0) : (b.unreadForStudent || 0) - (a.unreadForStudent || 0)));
+
   grid.innerHTML = `
     <div class="fb-form">
       <h3>${currentUser?.role === "teacher" ? "Диалогтар" : "Диалогтарым"}</h3>
       ${currentUser?.role === "student" ? `<button class="cpybtn" onclick="createConversationPrompt()">+ Жаңа диалог</button>` : `<button class="cpybtn" onclick="refreshConversations()">Жаңарту</button>`}
+      <div class="form-row" style="margin-top:10px;">
+        <div class="fg"><input class="fi" id="${searchInputId}" placeholder="Диалог іздеу" value="${escapeHtml(document.getElementById(searchInputId)?.value || "")}" oninput="renderFeedbackSection()"></div>
+        <div class="fg"><select class="fs" id="${sortSelectId}" onchange="renderFeedbackSection()"><option value="new" ${sortBy === "new" ? "selected" : ""}>Жаңа</option><option value="old" ${sortBy === "old" ? "selected" : ""}>Ескі</option><option value="unread" ${sortBy === "unread" ? "selected" : ""}>Оқылмаған</option></select></div>
+      </div>
       <div style="margin-top:12px;max-height:420px;overflow:auto;">
-        ${conversations.map((c) => `<div class="qq" style="${activeConversationId === c._id ? 'border-color:var(--accent);color:var(--accent);' : ''}" onclick="openConversation('${c._id}')"><strong>${c.subject}</strong><br><span style="font-size:11px;color:var(--text3)">${c.studentName || ""} ${c.className ? `(${c.className})` : ""}</span></div>`).join("") || '<div class="empty-state">Диалог жоқ</div>'}
+        ${filteredConversations.map((c) => {
+          const unread = currentUser?.role === "teacher" ? (c.unreadForTeacher || 0) : (c.unreadForStudent || 0);
+          const badge = unread > 0 ? `<span class="badge b-amber" style="margin-left:6px;">${unread}</span>` : "";
+          const lastSeenAt = currentUser?.role === "teacher" ? c.lastSeenByStudentAt : c.lastSeenByTeacherAt;
+          const lastSeenLabel = lastSeenAt
+            ? ` · Соңғы көргені: ${new Date(lastSeenAt).toLocaleString("kk-KZ")}`
+            : "";
+          return `<div class="qq" style="${activeConversationId === c._id ? 'border-color:var(--accent);color:var(--accent);' : ''}" onclick="openConversation('${c._id}')"><strong>${c.subject}</strong>${badge}<br><span style="font-size:11px;color:var(--text3)">${c.studentName || ""} ${c.className ? `(${c.className})` : ""}${lastSeenLabel}</span></div>`;
+        }).join("") || `<div class="empty-state">Диалог жоқ<br><button class="cpybtn" style="margin-top:10px;" onclick="${currentUser?.role === "student" ? "createConversationPrompt()" : "refreshConversations()"}">${currentUser?.role === "student" ? "Жаңа диалог ашу" : "Жаңарту"}</button></div>`}
       </div>
     </div>
     <div class="fb-form">
@@ -712,6 +823,7 @@ function renderChatMessagesHtml() {
 async function refreshConversations() {
   const c = await apiRequest('/messages/conversations');
   conversations = c.conversations || [];
+  buildNav();
   if (!activeConversationId && conversations.length) activeConversationId = conversations[0]._id;
   if (activeConversationId) await loadConversationMessages(activeConversationId);
   renderFeedbackSection();
@@ -720,6 +832,15 @@ async function refreshConversations() {
 async function loadConversationMessages(conversationId) {
   const data = await apiRequest(`/messages/conversations/${conversationId}/messages`);
   chatMessages = data.messages || [];
+  conversations = (conversations || []).map((c) => {
+    if (c._id !== conversationId) return c;
+    return {
+      ...c,
+      unreadForTeacher: currentUser?.role === "teacher" ? 0 : (c.unreadForTeacher || 0),
+      unreadForStudent: currentUser?.role === "student" ? 0 : (c.unreadForStudent || 0),
+    };
+  });
+  buildNav();
 }
 
 async function openConversation(conversationId) {
@@ -744,7 +865,7 @@ async function sendChatMessage() {
     if (currentUser?.role === "student") {
       await createConversationPrompt();
     } else {
-      alert("Алдымен диалог таңдаңыз.");
+      showToast("Алдымен диалог таңдаңыз.", "error");
     }
     return;
   }
@@ -776,8 +897,16 @@ function openCrudModal(title, fields, onSave) {
   crudSaveHandler = async () => {
     const values = {};
     bodyEl.querySelectorAll("[data-field]").forEach((el) => { values[el.dataset.field] = el.value.trim(); });
-    await onSave(values);
-    closeCrudModal();
+    saveBtn.disabled = true;
+    const oldText = saveBtn.textContent;
+    saveBtn.textContent = "Сақталуда...";
+    try {
+      await onSave(values);
+      closeCrudModal();
+    } finally {
+      saveBtn.disabled = false;
+      saveBtn.textContent = oldText;
+    }
   };
   saveBtn.onclick = () => crudSaveHandler && crudSaveHandler();
   overlay.classList.add("open");
@@ -787,6 +916,16 @@ function closeCrudModal() {
   document.getElementById("crudModalOverlay").classList.remove("open");
   crudSaveHandler = null;
 }
+
+profileModule = window.createProfileModule?.({
+  getCurrentUser: () => currentUser,
+  setCurrentUser,
+  apiRequest,
+  setHeaderUser,
+  showToast,
+  setButtonLoading,
+  fileToDataUrl,
+});
 
 async function restoreSession() {
   const token = getToken();
