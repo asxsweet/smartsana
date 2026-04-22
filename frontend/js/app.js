@@ -17,6 +17,29 @@ const feedbackDefaults = {
 
 const SYS = 'Сен Arduino және IoT оқу платформасының AI көмекшісісің. Оқушылар мен мұғалімдер қазақша сұрақ қояды, сен де қазақша жауап бер. Жауаптарың қысқа әрі нақты болсын: артық созба, бірақ мағынасы толық және түсінікті болсын. Қажет болса 3-5 тармақпен бер.';
 
+function getViewedStorageKey() {
+  const userId = currentUser?.id || currentUser?._id || "guest";
+  return `videoViewed:${userId}`;
+}
+
+function loadViewedFromStorage() {
+  try {
+    const raw = localStorage.getItem(getViewedStorageKey());
+    const parsed = raw ? JSON.parse(raw) : {};
+    return parsed && typeof parsed === "object" ? parsed : {};
+  } catch (_e) {
+    return {};
+  }
+}
+
+function saveViewedToStorage(map) {
+  try {
+    localStorage.setItem(getViewedStorageKey(), JSON.stringify(map || {}));
+  } catch (_e) {
+    // Ignore storage quota/security errors.
+  }
+}
+
 function setHeaderUser(user) {
   const nameEl = document.getElementById("uName");
   const avatarEl = document.getElementById("uAvatar");
@@ -160,11 +183,16 @@ async function loadData() {
   siteConfig = cfg.config || siteConfig;
   conversations = c.conversations || [];
   const progress = progressData?.progress || [];
-  videoProgressById = progress.reduce((acc, item) => {
+  const serverProgress = progress.reduce((acc, item) => {
     const key = String(item.videoId?._id || item.videoId || "");
     if (key) acc[key] = item.lastViewedAt;
     return acc;
   }, {});
+  const localProgress = currentUser.role === "student" ? loadViewedFromStorage() : {};
+  videoProgressById = { ...localProgress, ...serverProgress };
+  if (currentUser.role === "student") {
+    saveViewedToStorage(videoProgressById);
+  }
   if (currentUser.role === "teacher") {
     const usersData = await apiRequest("/users");
     students = (usersData.users || []).filter((u) => u.role === "student");
@@ -299,6 +327,7 @@ async function openVideoLesson(videoId) {
   } else {
     const lastViewedAt = data.lastViewedAt || new Date().toISOString();
     videoProgressById[String(videoId)] = lastViewedAt;
+    saveViewedToStorage(videoProgressById);
     renderVideos();
     const submission = data.submission;
     bodyEl.innerHTML = `
@@ -607,11 +636,27 @@ function renderCodes() {
   const list = document.getElementById('codeList');
   list.innerHTML = teacherActionBar('Код үлгілері') + (siteConfig.codes || []).map((c, i) => `
     <div class="citem"><div class="chead"><div class="ctitle">${c.title}</div><div class="cmeta">${c.meta}</div></div>
-    <div class="code-body" style="display:block;"><pre>${c.code}</pre><div class="cactions">
+    <div class="code-body" style="display:block;"><pre>${highlightCodeSnippet(c.code)}</pre><div class="cactions">
       <button class="cpybtn" onclick="copyC(this)">Кодты көшіру</button>
       ${currentUser?.role === 'teacher' ? `<button class="cpybtn" onclick="deleteCode(${i})">Жою</button>` : ''}
     </div></div></div>`).join('')
     + (currentUser?.role === 'teacher' ? `<button class="add-btn" onclick="addCodePrompt()">+ Код қосу</button>` : '');
+}
+
+function decodeStoredCode(value) {
+  const txt = document.createElement("textarea");
+  txt.innerHTML = String(value || "");
+  return txt.value;
+}
+
+function highlightCodeSnippet(rawCode) {
+  const code = decodeStoredCode(rawCode);
+  const escaped = escapeHtml(code);
+  const withComments = escaped.replace(/(\/\/.*)$/gm, '<span class="cm">$1</span>');
+  const withStrings = withComments.replace(/("([^"\\]|\\.)*")/g, '<span class="str">$1</span>');
+  const withNumbers = withStrings.replace(/\b(\d+)\b/g, '<span class="num">$1</span>');
+  const withKeywords = withNumbers.replace(/\b(void|int|float|double|bool|char|String|if|else|for|while|return|true|false|const|unsigned|long|short)\b/g, '<span class="kw">$1</span>');
+  return withKeywords.replace(/\b(setup|loop|pinMode|digitalWrite|digitalRead|analogRead|analogWrite|delay|Serial|begin|println|print)\b/g, '<span class="fn">$1</span>');
 }
 
 async function addCodePrompt() {

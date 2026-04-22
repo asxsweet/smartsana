@@ -64,21 +64,34 @@ router.put("/", requireAuth, requireRole("teacher"), async (req, res) => {
     return res.status(400).json({ message: "Invalid request", issues: parsed.error.flatten() });
   }
   const normalized = parsed.data;
-  const sensorKeySet = new Set();
+  const existingSensorKeys = new Set();
+  const newSensorKeys = new Set();
   for (const s of normalized.sensors) {
     const key = `${(s.lbl || "").trim().toLowerCase()}::${(s.name || "").trim().toLowerCase()}`;
-    if (sensorKeySet.has(key)) {
+    if (!key || key === "::") continue;
+    if (s._id) {
+      existingSensorKeys.add(key);
+      continue;
+    }
+    if (newSensorKeys.has(key) || existingSensorKeys.has(key)) {
       return res.status(409).json({ message: "Дубликат датчик табылды" });
     }
-    sensorKeySet.add(key);
+    newSensorKeys.add(key);
   }
-  const codeKeySet = new Set();
+
+  const existingCodeKeys = new Set();
+  const newCodeKeys = new Set();
   for (const c of normalized.codes) {
     const key = `${(c.title || "").trim().toLowerCase()}::${(c.code || "").trim().toLowerCase()}`;
-    if (codeKeySet.has(key)) {
+    if (!key || key === "::") continue;
+    if (c._id) {
+      existingCodeKeys.add(key);
+      continue;
+    }
+    if (newCodeKeys.has(key) || existingCodeKeys.has(key)) {
       return res.status(409).json({ message: "Дубликат код табылды" });
     }
-    codeKeySet.add(key);
+    newCodeKeys.add(key);
   }
   const updated = await SiteConfig.findOneAndUpdate(
     {},
