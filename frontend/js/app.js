@@ -7,6 +7,7 @@ let chatMessages = [];
 let siteConfig = { sensors: [], codes: [], quickQuestions: [] };
 let aiHistory = { q: [] };
 let crudSaveHandler = null;
+let toastTimer = null;
 const feedbackDefaults = {
   title: document.querySelector("#sec-feedback .sec-title")?.textContent || "Мұғалімге жазу",
   sub: document.querySelector("#sec-feedback .sec-sub")?.textContent || "",
@@ -14,6 +15,28 @@ const feedbackDefaults = {
 };
 
 const SYS = 'Сен Arduino және IoT оқу платформасының AI көмекшісісің. Оқушылар мен мұғалімдер қазақша сұрақ қояды, сен де қазақша жауап бер.';
+
+function showToast(message, type = "success", duration = 3800) {
+  const toast = document.getElementById("toast");
+  if (!toast) return;
+  toast.textContent = message;
+  toast.classList.remove("success", "error", "show");
+  toast.classList.add(type === "error" ? "error" : "success");
+  if (toastTimer) {
+    clearTimeout(toastTimer);
+    toastTimer = null;
+  }
+  requestAnimationFrame(() => {
+    toast.classList.add("show");
+  });
+  toastTimer = setTimeout(() => {
+    toast.classList.remove("show");
+  }, duration);
+}
+
+function normalizeText(value) {
+  return String(value || "").trim().toLowerCase();
+}
 
 function switchAuthTab(t) {
   document.querySelectorAll('.auth-tab').forEach((b, i) => b.classList.toggle('active', i === (t === 'login' ? 0 : 1)));
@@ -171,19 +194,34 @@ async function addVideoPrompt() {
     { key: "dur", label: "Ұзақтығы", value: "10:00" },
     { key: "desc", label: "Сипаттама", value: "" },
     { key: "url", label: "YouTube URL", value: "" },
-    { key: "tasksText", label: "Тапсырмалар (әр жол: Тақырып|Нұсқау|Ұпай)", value: "1-тапсырма|Схеманы сипатта|10", textarea: true },
+    { key: "tasksText", label: "Тапсырма мәтіні (көп жол жазсаңыз да бір тапсырма болады)", value: "Схеманы сипаттаңыз", textarea: true },
   ], async (values) => {
-    const tasks = (values.tasksText || "")
-      .split("\n")
-      .map((line) => line.trim())
-      .filter(Boolean)
-      .map((line) => {
-        const [title, instruction, maxScore] = line.split("|").map((x) => (x || "").trim());
-        return { title: title || "Тапсырма", instruction: instruction || "Нұсқау", maxScore: Number(maxScore || 10) };
-      });
-    await apiRequest('/videos', { method: 'POST', body: JSON.stringify({ ...values, tasks }) });
-    await loadData();
-    renderVideos();
+    try {
+      const videoTitle = normalizeText(values.title);
+      const videoUrl = normalizeText(values.url);
+      const duplicateVideo = videos.find((v) => (
+        (videoTitle && normalizeText(v.title) === videoTitle) ||
+        (videoUrl && normalizeText(v.url) === videoUrl)
+      ));
+      if (duplicateVideo) {
+        const shouldContinue = confirm("Бұл видео бұрын қосылған. Қайталап қосқыңыз келе ме?");
+        if (!shouldContinue) {
+          showToast("Видео қосудан бас тартылды.", "error");
+          return;
+        }
+      }
+      const instruction = (values.tasksText || "").trim();
+      const tasks = instruction
+        ? [{ title: "Тапсырма", instruction, maxScore: 10 }]
+        : [];
+      await apiRequest('/videos', { method: 'POST', body: JSON.stringify({ ...values, tasks }) });
+      await loadData();
+      renderVideos();
+      showToast("Видео сәтті қосылды.", "success");
+    } catch (e) {
+      showToast(e?.message || "Видеоны қосу сәтсіз аяқталды.", "error");
+      throw e;
+    }
   });
 }
 
@@ -386,7 +424,12 @@ async function deleteStudent(studentId) {
 
 function renderSensors() {
   const holder = document.getElementById('sensorTabs');
-  const tabs = siteConfig.sensors.map((s, i) => `<button class="stab${i === 0 ? ' active' : ''}" onclick="setSensor(${i},this)">${s.ico} ${s.lbl}${currentUser?.role === 'teacher' ? ` ✕` : ''}</button>`).join('');
+  const tabs = siteConfig.sensors.map((s, i) => {
+    if (currentUser?.role === "teacher") {
+      return `<button class="stab${i === 0 ? ' active' : ''}" onclick="setSensor(${i},this)">${s.ico} ${s.lbl} <span style="margin-left:6px;color:var(--red);font-weight:700;cursor:pointer;" onclick="event.stopPropagation();deleteSensor(${i})">✕</span></button>`;
+    }
+    return `<button class="stab${i === 0 ? ' active' : ''}" onclick="setSensor(${i},this)">${s.ico} ${s.lbl}</button>`;
+  }).join('');
   holder.innerHTML = teacherActionBar('Датчиктер') + tabs + (currentUser?.role === 'teacher' ? `<button class="stab" onclick="addSensorPrompt()">+ Қосу</button>` : '');
   if (siteConfig.sensors.length) setSensor(0);
 }
@@ -403,7 +446,6 @@ function setSensor(i, btn) {
   iconEl.textContent = s.ico || "⚙️";
   document.getElementById('sLbl').textContent = `${s.lbl} датчигі`;
   document.getElementById('sNote').textContent = s.note;
-  document.getElementById('pinBody').innerHTML = (s.pins || []).map((p) => `<tr><td><span class="pb ${p[2] || 'pd'}">${p[0] || ''}</span></td><td>${p[1] || ''}</td><td>${p[3] || ''}</td></tr>`).join('');
   if (s.image) {
     imageEl.src = s.image;
     imageEl.style.display = "block";
@@ -418,6 +460,7 @@ function setSensor(i, btn) {
 }
 
 async function addSensorPrompt() {
+  const iconOptions = ["⚙️", "🌡️", "💧", "🌫️", "☀️", "🌱", "🔥", "💡", "📡", "🔊", "📷", "🧭", "🛰️", "🔋", "⚡"];
   const overlay = document.getElementById("crudModalOverlay");
   const titleEl = document.getElementById("crudModalTitle");
   const bodyEl = document.getElementById("crudModalBody");
@@ -426,7 +469,14 @@ async function addSensorPrompt() {
   bodyEl.innerHTML = `
     <div class="fg"><label class="fl">Қысқа атауы (мыс: DHT11)</label><input class="fi" id="sensor_lbl"></div>
     <div class="fg"><label class="fl">Толық атауы</label><input class="fi" id="sensor_name"></div>
-    <div class="fg"><label class="fl">Иконка (fallback)</label><input class="fi" id="sensor_ico" value="⚙️"></div>
+    <div class="fg">
+      <label class="fl">Иконка таңдау</label>
+      <select class="fs" id="sensor_ico_select">
+        ${iconOptions.map((icon) => `<option value="${icon}">${icon}</option>`).join("")}
+      </select>
+      <div style="font-size:11px;color:var(--text3);margin-top:6px;">Немесе өз иконкаңызды/эмоджиді жазыңыз:</div>
+      <input class="fi" id="sensor_ico_custom" value="">
+    </div>
     <div class="fg"><label class="fl">Сипаттама</label><input class="fi" id="sensor_desc" value="Сипаттама"></div>
     <div class="fg"><label class="fl">Ескерту</label><input class="fi" id="sensor_note" value="Ескерту"></div>
     <div class="fg">
@@ -437,38 +487,64 @@ async function addSensorPrompt() {
   `;
 
   crudSaveHandler = async () => {
-    const lbl = document.getElementById("sensor_lbl")?.value.trim();
-    const name = document.getElementById("sensor_name")?.value.trim();
-    const ico = document.getElementById("sensor_ico")?.value.trim() || "⚙️";
-    const desc = document.getElementById("sensor_desc")?.value.trim() || "Сипаттама";
-    const note = document.getElementById("sensor_note")?.value.trim() || "Ескерту";
-    const fileEl = document.getElementById("sensor_image_file");
-    const file = fileEl?.files?.[0];
-    let image = "";
-    if (file) {
-      const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/gif", "image/svg+xml"];
-      const isAllowed = allowedTypes.includes(file.type) || /\.(jpe?g|png|webp|gif|svg)$/i.test(file.name);
-      if (!isAllowed) {
-        alert("Қолдау бар форматтар: jpg, jpeg, png, webp, gif, svg");
-        return;
+    try {
+      const lbl = document.getElementById("sensor_lbl")?.value.trim();
+      const name = document.getElementById("sensor_name")?.value.trim();
+      const selectedIcon = document.getElementById("sensor_ico_select")?.value || "⚙️";
+      const customIcon = document.getElementById("sensor_ico_custom")?.value.trim();
+      const ico = customIcon || selectedIcon || "⚙️";
+      const desc = document.getElementById("sensor_desc")?.value.trim() || "Сипаттама";
+      const note = document.getElementById("sensor_note")?.value.trim() || "Ескерту";
+      const duplicateSensor = (siteConfig.sensors || []).find((s) => (
+        (normalizeText(lbl) && normalizeText(s.lbl) === normalizeText(lbl)) ||
+        (normalizeText(name) && normalizeText(s.name) === normalizeText(name))
+      ));
+      if (duplicateSensor) {
+        const shouldContinue = confirm("Бұл датчик бұрын қосылған. Қайталап қосқыңыз келе ме?");
+        if (!shouldContinue) {
+          showToast("Датчик қосудан бас тартылды.", "error");
+          return;
+        }
       }
-      image = await fileToDataUrl(file);
+      const fileEl = document.getElementById("sensor_image_file");
+      const file = fileEl?.files?.[0];
+      let image = "";
+      if (file) {
+        const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/gif", "image/svg+xml"];
+        const isAllowed = allowedTypes.includes(file.type) || /\.(jpe?g|png|webp|gif|svg)$/i.test(file.name);
+        if (!isAllowed) {
+          showToast("Қолдау бар форматтар: jpg, jpeg, png, webp, gif, svg", "error");
+          return;
+        }
+        image = await fileToDataUrl(file);
+      }
+      siteConfig.sensors.push({
+        name: name || `${lbl || "Датчик"} — Жаңа датчик`,
+        desc,
+        ico,
+        image,
+        lbl: lbl || "SENSOR",
+        note,
+        pins: [['PIN', 'D2', 'pd', 'Сипат']],
+      });
+      await apiRequest('/site-config', { method: 'PUT', body: JSON.stringify(siteConfig) });
+      renderSensors();
+      closeCrudModal();
+      showToast("Датчик сәтті қосылды.", "success");
+    } catch (e) {
+      showToast(e?.message || "Датчикті қосу сәтсіз аяқталды.", "error");
     }
-    siteConfig.sensors.push({
-      name: name || `${lbl || "Датчик"} — Жаңа датчик`,
-      desc,
-      ico,
-      image,
-      lbl: lbl || "SENSOR",
-      note,
-      pins: [['PIN', 'D2', 'pd', 'Сипат']],
-    });
-    await apiRequest('/site-config', { method: 'PUT', body: JSON.stringify(siteConfig) });
-    renderSensors();
-    closeCrudModal();
   };
   saveBtn.onclick = () => crudSaveHandler && crudSaveHandler();
   overlay.classList.add("open");
+}
+
+async function deleteSensor(index) {
+  if (!confirm("Датчикті жоясыз ба?")) return;
+  siteConfig.sensors.splice(index, 1);
+  await apiRequest('/site-config', { method: 'PUT', body: JSON.stringify(siteConfig) });
+  renderSensors();
+  showToast("Датчик сәтті жойылды.", "success");
 }
 
 function fileToDataUrl(file) {
@@ -506,9 +582,26 @@ async function addCodePrompt() {
     { key: "meta", label: "Meta", value: "Мұғалім қосты" },
     { key: "code", label: "Код", value: "void setup(){}\nvoid loop(){}", textarea: true },
   ], async (v) => {
-    siteConfig.codes.push({ title: v.title, meta: v.meta, code: (v.code || '').replace(/</g, '&lt;') });
-    await apiRequest('/site-config', { method: 'PUT', body: JSON.stringify(siteConfig) });
-    renderCodes();
+    try {
+      const duplicateCode = (siteConfig.codes || []).find((c) => (
+        (normalizeText(v.title) && normalizeText(c.title) === normalizeText(v.title)) ||
+        (normalizeText(v.code) && normalizeText(c.code) === normalizeText((v.code || '').replace(/</g, '&lt;')))
+      ));
+      if (duplicateCode) {
+        const shouldContinue = confirm("Бұл код бұрын қосылған. Қайталап қосқыңыз келе ме?");
+        if (!shouldContinue) {
+          showToast("Код қосудан бас тартылды.", "error");
+          return;
+        }
+      }
+      siteConfig.codes.push({ title: v.title, meta: v.meta, code: (v.code || '').replace(/</g, '&lt;') });
+      await apiRequest('/site-config', { method: 'PUT', body: JSON.stringify(siteConfig) });
+      renderCodes();
+      showToast("Код сәтті қосылды.", "success");
+    } catch (e) {
+      showToast(e?.message || "Кодты қосу сәтсіз аяқталды.", "error");
+      throw e;
+    }
   });
 }
 
