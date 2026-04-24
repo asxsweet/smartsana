@@ -459,3 +459,20 @@
 {"level":"info","message":{"durationMs":5,"method":"POST","status":409,"url":"/api/videos"},"timestamp":"2026-04-24T09:41:28.948Z"}
 {"level":"info","message":"Server running on http://localhost:5000","timestamp":"2026-04-24T09:52:22.683Z"}
 {"level":"info","message":"Server running on http://localhost:5000","timestamp":"2026-04-24T09:52:22.683Z"}
+{"level":"info","message":{"durationMs":20,"method":"POST","status":409,"url":"/api/auth/register"},"timestamp":"2026-04-24T09:57:56.967Z"}
+{"level":"info","message":{"durationMs":127,"method":"POST","status":200,"url":"/api/auth/login"},"timestamp":"2026-04-24T09:58:06.067Z"}
+{"level":"info","message":{"durationMs":24,"method":"GET","status":304,"url":"/api/videos"},"timestamp":"2026-04-24T09:58:06.098Z"}
+{"level":"info","message":{"durationMs":36,"method":"GET","status":304,"url":"/api/site-config"},"timestamp":"2026-04-24T09:58:06.115Z"}
+{"level":"info","message":{"durationMs":36,"method":"GET","status":200,"url":"/api/messages/conversations"},"timestamp":"2026-04-24T09:58:06.117Z"}
+{"level":"info","message":{"durationMs":41,"method":"GET","status":200,"url":"/api/videos/progress/me"},"timestamp":"2026-04-24T09:58:06.124Z"}
+{"level":"info","message":{"durationMs":13,"method":"GET","status":200,"url":"/api/videos/69e764c7536aac054e340dde/lesson"},"timestamp":"2026-04-24T09:58:16.018Z"}
+{"level":"info","message":{"durationMs":8,"method":"GET","status":200,"url":"/api/videos/69e8b236fe7ab80b757ca60f/lesson"},"timestamp":"2026-04-24T09:58:29.585Z"}
+{"level":"info","message":{"durationMs":8,"method":"GET","status":200,"url":"/api/videos/69e764c7536aac054e340dde/lesson"},"timestamp":"2026-04-24T09:58:38.294Z"}
+{"level":"info","message":{"durationMs":10,"method":"GET","status":200,"url":"/api/videos/69e764c7536aac054e340dde/lesson"},"timestamp":"2026-04-24T09:58:40.683Z"}
+{"level":"info","message":{"durationMs":1143,"method":"POST","status":201,"url":"/api/videos/69e764c7536aac054e340dde/submissions"},"timestamp":"2026-04-24T09:58:41.833Z"}
+{"level":"info","message":{"durationMs":9,"method":"GET","status":200,"url":"/api/videos/69e764c7536aac054e340dde/lesson"},"timestamp":"2026-04-24T09:58:41.846Z"}
+{"level":"info","message":{"durationMs":7,"method":"GET","status":200,"url":"/api/videos/69e764c7536aac054e340dde/lesson"},"timestamp":"2026-04-24T09:59:12.196Z"}
+{"level":"info","message":{"durationMs":1257,"method":"POST","status":201,"url":"/api/videos/69e764c7536aac054e340dde/submissions"},"timestamp":"2026-04-24T09:59:13.461Z"}
+{"level":"info","message":{"durationMs":9,"method":"GET","status":200,"url":"/api/videos/69e764c7536aac054e340dde/lesson"},"timestamp":"2026-04-24T09:59:13.476Z"}
+{"level":"info","message":"Server running on http://localhost:5000","timestamp":"2026-04-24T10:20:15.976Z"}
+{"level":"info","message":"Server running on http://localhost:5000","timestamp":"2026-04-24T10:20:15.981Z"}
