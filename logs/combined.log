@@ -506,3 +506,18 @@
 {"level":"info","message":{"durationMs":6,"method":"PUT","status":409,"url":"/api/site-config"},"timestamp":"2026-04-24T10:25:51.425Z"}
 {"level":"info","message":"Server running on http://localhost:5000","timestamp":"2026-04-24T10:35:52.302Z"}
 {"level":"info","message":"Server running on http://localhost:5000","timestamp":"2026-04-24T10:35:52.302Z"}
+{"level":"info","message":"Server running on http://localhost:5000","timestamp":"2026-04-24T10:58:34.636Z"}
+{"level":"info","message":"Server running on http://localhost:5000","timestamp":"2026-04-24T10:58:35.390Z"}
+{"level":"info","message":"Server running on http://localhost:5000","timestamp":"2026-04-24T10:58:51.799Z"}
+{"level":"info","message":{"durationMs":5,"method":"GET","status":304,"url":"/"},"timestamp":"2026-04-24T10:58:56.505Z"}
+{"level":"info","message":{"durationMs":2,"method":"GET","status":304,"url":"/css/main.css"},"timestamp":"2026-04-24T10:58:56.553Z"}
+{"level":"info","message":{"durationMs":2,"method":"GET","status":304,"url":"/js/api.js"},"timestamp":"2026-04-24T10:58:56.554Z"}
+{"level":"info","message":{"durationMs":1,"method":"GET","status":304,"url":"/js/ui-utils.js"},"timestamp":"2026-04-24T10:58:56.556Z"}
+{"level":"info","message":{"durationMs":1,"method":"GET","status":304,"url":"/js/profile-module.js"},"timestamp":"2026-04-24T10:58:56.556Z"}
+{"level":"info","message":{"durationMs":4,"method":"GET","status":200,"url":"/js/app.js"},"timestamp":"2026-04-24T10:58:56.559Z"}
+{"level":"info","message":{"durationMs":96,"method":"POST","status":200,"url":"/api/auth/login"},"timestamp":"2026-04-24T10:58:59.113Z"}
+{"level":"info","message":{"durationMs":13,"method":"GET","status":304,"url":"/api/videos"},"timestamp":"2026-04-24T10:58:59.131Z"}
+{"level":"info","message":{"durationMs":18,"method":"GET","status":304,"url":"/api/site-config"},"timestamp":"2026-04-24T10:58:59.140Z"}
+{"level":"info","message":{"durationMs":18,"method":"GET","status":200,"url":"/api/messages/conversations"},"timestamp":"2026-04-24T10:58:59.141Z"}
+{"level":"info","message":{"durationMs":7,"method":"GET","status":304,"url":"/api/users"},"timestamp":"2026-04-24T10:58:59.193Z"}
+{"level":"info","message":{"durationMs":16,"method":"GET","status":200,"url":"/api/messages/conversations/69e7778c5acdb5f7a4e55ccf/messages"},"timestamp":"2026-04-24T10:58:59.214Z"}
