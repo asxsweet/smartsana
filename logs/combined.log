@@ -476,3 +476,31 @@
 {"level":"info","message":{"durationMs":9,"method":"GET","status":200,"url":"/api/videos/69e764c7536aac054e340dde/lesson"},"timestamp":"2026-04-24T09:59:13.476Z"}
 {"level":"info","message":"Server running on http://localhost:5000","timestamp":"2026-04-24T10:20:15.976Z"}
 {"level":"info","message":"Server running on http://localhost:5000","timestamp":"2026-04-24T10:20:15.981Z"}
+{"level":"info","message":{"durationMs":5,"method":"GET","status":304,"url":"/"},"timestamp":"2026-04-24T10:22:47.813Z"}
+{"level":"info","message":{"durationMs":3,"method":"GET","status":304,"url":"/css/main.css"},"timestamp":"2026-04-24T10:22:47.909Z"}
+{"level":"info","message":{"durationMs":2,"method":"GET","status":304,"url":"/js/api.js"},"timestamp":"2026-04-24T10:22:47.910Z"}
+{"level":"info","message":{"durationMs":3,"method":"GET","status":304,"url":"/js/ui-utils.js"},"timestamp":"2026-04-24T10:22:47.911Z"}
+{"level":"info","message":{"durationMs":4,"method":"GET","status":304,"url":"/js/profile-module.js"},"timestamp":"2026-04-24T10:22:47.912Z"}
+{"level":"info","message":{"durationMs":3,"method":"GET","status":200,"url":"/js/app.js"},"timestamp":"2026-04-24T10:22:47.916Z"}
+{"level":"info","message":{"durationMs":15,"method":"GET","status":200,"url":"/api/auth/me"},"timestamp":"2026-04-24T10:22:47.979Z"}
+{"level":"info","message":{"durationMs":11,"method":"GET","status":304,"url":"/api/videos"},"timestamp":"2026-04-24T10:22:48.030Z"}
+{"level":"info","message":{"durationMs":18,"method":"GET","status":304,"url":"/api/site-config"},"timestamp":"2026-04-24T10:22:48.039Z"}
+{"level":"info","message":{"durationMs":15,"method":"GET","status":304,"url":"/api/messages/conversations"},"timestamp":"2026-04-24T10:22:48.041Z"}
+{"level":"info","message":{"durationMs":18,"method":"GET","status":200,"url":"/api/videos/progress/me"},"timestamp":"2026-04-24T10:22:48.045Z"}
+{"level":"info","message":{"durationMs":0,"method":"GET","status":304,"url":"/"},"timestamp":"2026-04-24T10:22:52.222Z"}
+{"level":"info","message":{"durationMs":1,"method":"GET","status":304,"url":"/css/main.css"},"timestamp":"2026-04-24T10:22:52.249Z"}
+{"level":"info","message":{"durationMs":1,"method":"GET","status":304,"url":"/js/api.js"},"timestamp":"2026-04-24T10:22:52.252Z"}
+{"level":"info","message":{"durationMs":2,"method":"GET","status":304,"url":"/js/ui-utils.js"},"timestamp":"2026-04-24T10:22:52.255Z"}
+{"level":"info","message":{"durationMs":2,"method":"GET","status":304,"url":"/js/profile-module.js"},"timestamp":"2026-04-24T10:22:52.256Z"}
+{"level":"info","message":{"durationMs":3,"method":"GET","status":304,"url":"/js/app.js"},"timestamp":"2026-04-24T10:22:52.257Z"}
+{"level":"info","message":{"durationMs":123,"method":"POST","status":200,"url":"/api/auth/login"},"timestamp":"2026-04-24T10:22:55.077Z"}
+{"level":"info","message":{"durationMs":8,"method":"GET","status":304,"url":"/api/videos"},"timestamp":"2026-04-24T10:22:55.092Z"}
+{"level":"info","message":{"durationMs":12,"method":"GET","status":304,"url":"/api/site-config"},"timestamp":"2026-04-24T10:22:55.097Z"}
+{"level":"info","message":{"durationMs":13,"method":"GET","status":200,"url":"/api/messages/conversations"},"timestamp":"2026-04-24T10:22:55.099Z"}
+{"level":"info","message":{"durationMs":7,"method":"GET","status":304,"url":"/api/users"},"timestamp":"2026-04-24T10:22:55.115Z"}
+{"level":"info","message":{"durationMs":18,"method":"GET","status":200,"url":"/api/messages/conversations/69e7778c5acdb5f7a4e55ccf/messages"},"timestamp":"2026-04-24T10:22:55.137Z"}
+{"level":"info","message":"Server running on http://localhost:5000","timestamp":"2026-04-24T10:25:43.059Z"}
+{"level":"info","message":"Server running on http://localhost:5000","timestamp":"2026-04-24T10:25:43.064Z"}
+{"level":"info","message":{"durationMs":29,"method":"PATCH","status":200,"url":"/api/auth/profile"},"timestamp":"2026-04-24T10:25:51.214Z"}
+{"level":"info","message":{"durationMs":4,"method":"PUT","status":403,"url":"/api/site-config"},"timestamp":"2026-04-24T10:25:51.319Z"}
+{"level":"info","message":{"durationMs":6,"method":"PUT","status":409,"url":"/api/site-config"},"timestamp":"2026-04-24T10:25:51.425Z"}

@@ -5,6 +5,7 @@ const { z } = require("zod");
 const User = require("../models/User");
 const { requireAuth } = require("../middlewares/auth");
 const { env } = require("../config/env");
+const { logger } = require("../logger");
 
 const router = express.Router();
 
@@ -69,53 +70,66 @@ async function verifyPasswordAndMigrate(user, password) {
 }
 
 router.post("/register", async (req, res) => {
-  const parsed = registerSchema.safeParse(req.body);
-  if (!parsed.success) {
-    return res.status(400).json({ message: "Invalid request", issues: parsed.error.flatten() });
-  }
-  const { name, email, password, className, role, teacherSetupCode } = parsed.data;
+  try {
+    const parsed = registerSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({ message: "Invalid request", issues: parsed.error.flatten() });
+    }
+    const { name, email, password, className, role, teacherSetupCode } = parsed.data;
 
-  const normalizedEmail = email.trim().toLowerCase();
-  const exists = await User.findOne({ email: normalizedEmail });
-  if (exists) {
-    // Recovery variant: if the same person re-registers with same name, refresh password and login.
-    if ((exists.name || "").trim().toLowerCase() === name.trim().toLowerCase()) {
-      exists.passwordHash = await bcrypt.hash(password, 10);
-      if (role === "student" && className) {
-        exists.className = className;
+    const normalizedEmail = email.trim().toLowerCase();
+    const exists = await User.findOne({ email: normalizedEmail });
+    if (exists) {
+      // Recovery variant: if the same person re-registers with same name, refresh password and login.
+      if ((exists.name || "").trim().toLowerCase() === name.trim().toLowerCase()) {
+        exists.passwordHash = await bcrypt.hash(password, 10);
+        if (role === "student" && className) {
+          exists.className = className;
+        }
+        await exists.save();
+        const token = signToken(exists);
+        return res.status(200).json({ token, user: toUserResponse(exists), recovered: true });
       }
-      await exists.save();
-      const token = signToken(exists);
-      return res.status(200).json({ token, user: toUserResponse(exists), recovered: true });
+      return res.status(409).json({ message: "Email already registered. Use login or exact same name for recovery." });
     }
-    return res.status(409).json({ message: "Email already registered. Use login or exact same name for recovery." });
-  }
 
-  let finalRole = "student";
-  if (role === "teacher") {
-    if (!env.teacherSetupCode) {
-      return res.status(403).json({ message: "Teacher setup is disabled" });
+    let finalRole = "student";
+    if (role === "teacher") {
+      if (!env.teacherSetupCode) {
+        return res.status(403).json({ message: "Teacher setup is disabled" });
+      }
+      if (teacherSetupCode !== env.teacherSetupCode) {
+        return res.status(403).json({ message: "Teacher setup code is invalid" });
+      }
+      const teachersCount = await User.countDocuments({ role: "teacher" });
+      if (teachersCount >= env.teacherMaxAccounts) {
+        return res.status(409).json({ message: `Teacher account limit reached (${env.teacherMaxAccounts})` });
+      }
+      finalRole = "teacher";
     }
-    if (teacherSetupCode !== env.teacherSetupCode) {
-      return res.status(403).json({ message: "Teacher setup code is invalid" });
-    }
-    const teachersCount = await User.countDocuments({ role: "teacher" });
-    if (teachersCount >= env.teacherMaxAccounts) {
-      return res.status(409).json({ message: `Teacher account limit reached (${env.teacherMaxAccounts})` });
-    }
-    finalRole = "teacher";
-  }
 
-  const passwordHash = await bcrypt.hash(password, 10);
-  const user = await User.create({
-    name,
-    email: normalizedEmail,
-    passwordHash,
-    role: finalRole,
-    className: finalRole === "teacher" ? "" : className,
-  });
-  const token = signToken(user);
-  return res.status(201).json({ token, user: toUserResponse(user) });
+    const passwordHash = await bcrypt.hash(password, 10);
+    const user = await User.create({
+      name,
+      email: normalizedEmail,
+      passwordHash,
+      role: finalRole,
+      className: finalRole === "teacher" ? "" : className,
+    });
+    const token = signToken(user);
+    return res.status(201).json({ token, user: toUserResponse(user) });
+  } catch (error) {
+    if (error?.code === 11000 && error?.keyPattern?.email) {
+      return res.status(409).json({ message: "Email already registered. Use login." });
+    }
+    logger.error({
+      message: "Register failed",
+      route: "POST /api/auth/register",
+      error: error?.message || "Unknown error",
+      stack: error?.stack,
+    });
+    return res.status(500).json({ message: "Тіркелу кезінде сервер қатесі болды. Кейінірек қайталап көріңіз." });
+  }
 });
 
 router.post("/login", async (req, res) => {
