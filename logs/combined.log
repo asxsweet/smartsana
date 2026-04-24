@@ -457,3 +457,5 @@
 {"level":"info","message":{"durationMs":25,"method":"GET","status":200,"url":"/api/videos/submissions/overview"},"timestamp":"2026-04-24T09:41:28.782Z"}
 {"level":"info","message":{"durationMs":9,"method":"POST","status":201,"url":"/api/videos"},"timestamp":"2026-04-24T09:41:28.936Z"}
 {"level":"info","message":{"durationMs":5,"method":"POST","status":409,"url":"/api/videos"},"timestamp":"2026-04-24T09:41:28.948Z"}
+{"level":"info","message":"Server running on http://localhost:5000","timestamp":"2026-04-24T09:52:22.683Z"}
+{"level":"info","message":"Server running on http://localhost:5000","timestamp":"2026-04-24T09:52:22.683Z"}
