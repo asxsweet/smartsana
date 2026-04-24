@@ -504,3 +504,5 @@
 {"level":"info","message":{"durationMs":29,"method":"PATCH","status":200,"url":"/api/auth/profile"},"timestamp":"2026-04-24T10:25:51.214Z"}
 {"level":"info","message":{"durationMs":4,"method":"PUT","status":403,"url":"/api/site-config"},"timestamp":"2026-04-24T10:25:51.319Z"}
 {"level":"info","message":{"durationMs":6,"method":"PUT","status":409,"url":"/api/site-config"},"timestamp":"2026-04-24T10:25:51.425Z"}
+{"level":"info","message":"Server running on http://localhost:5000","timestamp":"2026-04-24T10:35:52.302Z"}
+{"level":"info","message":"Server running on http://localhost:5000","timestamp":"2026-04-24T10:35:52.302Z"}
