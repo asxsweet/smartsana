@@ -253,15 +253,85 @@ function renderVideos() {
 }
 
 async function addVideoPrompt() {
-  openCrudModal("Жаңа видео қосу", [
-    { key: "title", label: "Тақырып", value: "" },
-    { key: "num", label: "Сабақ №", value: `${videos.length + 1}` },
-    { key: "dur", label: "Ұзақтығы", value: "10:00" },
-    { key: "desc", label: "Сипаттама", value: "" },
-    { key: "url", label: "YouTube URL", value: "" },
-    { key: "tasksText", label: "Тапсырма мәтіні (көп жол жазсаңыз да бір тапсырма болады)", value: "Схеманы сипаттаңыз", textarea: true },
-  ], async (values) => {
+  const overlay = document.getElementById("crudModalOverlay");
+  const titleEl = document.getElementById("crudModalTitle");
+  const bodyEl = document.getElementById("crudModalBody");
+  const saveBtn = document.getElementById("crudModalSaveBtn");
+  titleEl.textContent = "Жаңа видео қосу";
+  bodyEl.innerHTML = `
+    <div class="fg"><label class="fl">Тақырып</label><input class="fi" id="video-title" value=""></div>
+    <div class="fg"><label class="fl">Сабақ №</label><input class="fi" id="video-num" value="${videos.length + 1}"></div>
+    <div class="fg"><label class="fl">Ұзақтығы</label><input class="fi" id="video-dur" value="10:00"></div>
+    <div class="fg"><label class="fl">Сипаттама</label><textarea class="fta" id="video-desc"></textarea></div>
+    <div class="fg"><label class="fl">YouTube URL</label><input class="fi" id="video-url" value=""></div>
+    <div class="fg">
+      <div class="fl" style="display:flex;justify-content:space-between;align-items:center;">
+        <span>Тапсырмалар (әрқайсысы жеке)</span>
+        <button type="button" class="cpybtn" id="add-task-btn">+ Тапсырма қосу</button>
+      </div>
+      <div id="video-task-list" style="display:grid;gap:10px;"></div>
+    </div>
+  `;
+
+  const taskListEl = document.getElementById("video-task-list");
+  function renderTaskRows(tasks) {
+    taskListEl.innerHTML = tasks.map((task, idx) => `
+      <div class="qq" data-task-idx="${idx}">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <strong>Тапсырма ${idx + 1}</strong>
+          <button type="button" class="cpybtn remove-task-btn" data-task-idx="${idx}" style="color:var(--red);border-color:rgba(252,129,129,.35);">Жою</button>
+        </div>
+        <label class="fl">Тапсырма атауы</label>
+        <input class="fi task-title" value="${escapeHtml(task.title || `Тапсырма ${idx + 1}`)}">
+        <label class="fl" style="margin-top:6px;">Нұсқау мәтіні</label>
+        <textarea class="fta task-instruction" placeholder="Осы тапсырманың толық мәтінін жазыңыз">${escapeHtml(task.instruction || "")}</textarea>
+        <label class="fl" style="margin-top:6px;">Макс. ұпай</label>
+        <input class="fi task-score" value="${Number(task.maxScore || 10)}">
+      </div>
+    `).join("");
+  }
+
+  let taskDraft = [
+    { title: "Тапсырма 1", instruction: "", maxScore: 10 },
+  ];
+  renderTaskRows(taskDraft);
+
+  document.getElementById("add-task-btn")?.addEventListener("click", () => {
+    taskDraft = taskDraft.concat({ title: `Тапсырма ${taskDraft.length + 1}`, instruction: "", maxScore: 10 });
+    renderTaskRows(taskDraft);
+  });
+
+  bodyEl.onclick = (event) => {
+    const removeBtn = event.target.closest(".remove-task-btn");
+    if (!removeBtn) return;
+    const idx = Number(removeBtn.dataset.taskIdx);
+    if (!Number.isFinite(idx)) return;
+    taskDraft = taskDraft.filter((_, i) => i !== idx);
+    if (!taskDraft.length) taskDraft = [{ title: "Тапсырма 1", instruction: "", maxScore: 10 }];
+    renderTaskRows(taskDraft);
+  };
+
+  crudSaveHandler = async () => {
     try {
+      const values = {
+        title: document.getElementById("video-title")?.value.trim() || "",
+        num: document.getElementById("video-num")?.value.trim() || "",
+        dur: document.getElementById("video-dur")?.value.trim() || "10:00",
+        desc: document.getElementById("video-desc")?.value.trim() || "",
+        url: document.getElementById("video-url")?.value.trim() || "",
+      };
+      const taskRows = Array.from(bodyEl.querySelectorAll("#video-task-list .qq"));
+      const tasks = taskRows.map((row, idx) => ({
+        title: (row.querySelector(".task-title")?.value || `Тапсырма ${idx + 1}`).trim(),
+        instruction: (row.querySelector(".task-instruction")?.value || "").trim(),
+        maxScore: Number(row.querySelector(".task-score")?.value || 10),
+      })).filter((task) => task.instruction);
+
+      if (!tasks.length) {
+        showToast("Кемінде бір тапсырма мәтінін енгізіңіз.", "error");
+        return;
+      }
+
       const videoTitle = normalizeText(values.title);
       const videoUrl = normalizeText(values.url);
       const duplicateVideo = videos.find((v) => (
@@ -275,19 +345,27 @@ async function addVideoPrompt() {
           return;
         }
       }
-      const instruction = (values.tasksText || "").trim();
-      const tasks = instruction
-        ? [{ title: "Тапсырма", instruction, maxScore: 10 }]
-        : [];
-      await apiRequest('/videos', { method: 'POST', body: JSON.stringify({ ...values, tasks }) });
+
+      saveBtn.disabled = true;
+      const oldText = saveBtn.textContent;
+      saveBtn.textContent = "Сақталуда...";
+      try {
+        await apiRequest('/videos', { method: 'POST', body: JSON.stringify({ ...values, tasks }) });
+      } finally {
+        saveBtn.disabled = false;
+        saveBtn.textContent = oldText;
+      }
       await loadData();
       renderVideos();
+      closeCrudModal();
       showToast("Видео сәтті қосылды.", "success");
     } catch (e) {
       showToast(e?.message || "Видеоны қосу сәтсіз аяқталды.", "error");
-      throw e;
     }
-  });
+  };
+
+  saveBtn.onclick = () => crudSaveHandler && crudSaveHandler();
+  overlay.classList.add("open");
 }
 
 async function deleteVideo(id) {

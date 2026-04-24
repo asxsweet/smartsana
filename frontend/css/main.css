@@ -235,6 +235,9 @@ pre{background:#0d1117;padding:18px;font-family:var(--mono);font-size:13px;line-
 .mbtn{flex:1;padding:10px;border-radius:var(--r2);font-family:var(--font);font-weight:600;font-size:14px;cursor:pointer;transition:all .2s;}
 .mbtn-cancel{background:var(--bg3);border:0.5px solid var(--border);color:var(--text2);}
 .mbtn-ok{background:var(--accent);border:none;color:#0a0e1a;}
+.modal-overlay#lessonModalOverlay{align-items:flex-start;overflow-y:auto;}
+.modal-overlay#lessonModalOverlay .modal{margin:24px auto;max-height:calc(100vh - 48px);display:flex;flex-direction:column;}
+#lessonModalBody{flex:1;min-height:0;overflow:auto;padding-right:4px;}
 .sub-btn:disabled,.mbtn:disabled,.cpybtn:disabled,.add-btn:disabled{opacity:.65;cursor:not-allowed;pointer-events:none;}
 @media(max-width:900px){
   header{padding:8px 12px;height:auto;gap:10px;align-items:flex-start;flex-wrap:wrap;}
