@@ -5,6 +5,7 @@ const VideoSubmission = require("../models/VideoSubmission");
 const VideoView = require("../models/VideoView");
 const { requireAuth, requireRole } = require("../middlewares/auth");
 const { isConfigured: isCloudinaryConfigured, uploadSubmissionFile } = require("../services/cloudinary");
+const { generateAiGrade } = require("../services/ai-grading");
 
 const router = express.Router();
 
@@ -156,6 +157,10 @@ router.post("/:id/submissions", requireAuth, async (req, res) => {
         answers: parsed.data.answers.map((a) => ({ taskId: a.taskId, answerText: (a.answerText || "").trim() })),
         files: uploadedFiles,
         status: "submitted",
+        aiScore: 0,
+        aiFeedback: "",
+        aiSuggestion: "",
+        aiEvaluatedAt: null,
         feedback: "",
         score: 0,
         gradedBy: null,
@@ -164,6 +169,20 @@ router.post("/:id/submissions", requireAuth, async (req, res) => {
     },
     { upsert: true, new: true }
   );
+
+  const aiGrade = await generateAiGrade({
+    video,
+    answers: parsed.data.answers.map((a) => ({ taskId: a.taskId, answerText: (a.answerText || "").trim() })),
+  });
+
+  if (aiGrade) {
+    submission.aiScore = aiGrade.score;
+    submission.aiFeedback = aiGrade.feedback;
+    submission.aiSuggestion = aiGrade.suggestion;
+    submission.aiEvaluatedAt = new Date();
+    await submission.save();
+  }
+
   return res.status(201).json({ submission });
 });
 

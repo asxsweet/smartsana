@@ -315,6 +315,9 @@ async function openVideoLesson(videoId) {
           <div class="msg-item">
             <div class="msg-from">${s.studentId?.name || "Студент"} (${s.studentId?.className || "-"})</div>
             <div class="msg-meta">Статус: ${s.status} | Ұпай: ${s.score || 0}</div>
+            <div class="msg-text">AI бағасы: ${s.aiEvaluatedAt ? (s.aiScore || 0) : "Әлі жоқ"}${s.aiFeedback ? ` · ${s.aiFeedback}` : ""}</div>
+            ${s.aiSuggestion ? `<div class="msg-text">AI ұсынысы: ${s.aiSuggestion}</div>` : ""}
+            <div class="msg-text">Мұғалім бағасы: ${s.status === "graded" ? (s.score || 0) : "Қойылмаған"}${s.feedback ? ` · ${s.feedback}` : ""}</div>
             ${(s.answers || []).map((a, i) => `<div class="msg-text">${i + 1}) ${a.answerText}</div>`).join("")}
             ${(s.files || []).length ? `<div class="msg-text">Файлдар: ${(s.files || []).map((f) => `<a href="${f.url || f.dataUrl}" download="${escapeHtml(f.name)}" target="_blank" rel="noopener">${escapeHtml(f.name)}</a>`).join(" · ")}</div>` : ""}
             <div style="display:flex;gap:8px;margin-top:8px;">
@@ -340,7 +343,9 @@ async function openVideoLesson(videoId) {
         <input class="fi" id="submission-files" type="file" multiple>
       </div>
       ${submission?.files?.length ? `<div class="note-box">Бұрын жіберілген файлдар: ${(submission.files || []).map((f) => `<a href="${f.url || f.dataUrl}" download="${escapeHtml(f.name)}" target="_blank" rel="noopener">${escapeHtml(f.name)}</a>`).join(" · ")}</div>` : ""}
-      ${submission ? `<div class="note-box">Соңғы статус: ${submission.status}. Ұпай: ${submission.score || 0}. ${submission.feedback || ''}</div>` : ""}
+      ${submission ? `<div class="note-box">AI бағасы: ${submission.aiEvaluatedAt ? (submission.aiScore || 0) : "Әлі жоқ"}${submission.aiFeedback ? ` · ${submission.aiFeedback}` : ""}</div>` : ""}
+      ${submission?.aiSuggestion ? `<div class="note-box">AI ұсынысы: ${submission.aiSuggestion}</div>` : ""}
+      ${submission ? `<div class="note-box">Мұғалім бағасы: ${submission.status === "graded" ? (submission.score || 0) : "Қойылмаған"}${submission.feedback ? ` · ${submission.feedback}` : ""}</div>` : ""}
       <button class="sub-btn" onclick="submitVideoTasks('${video._id}')">Тапсырманы жіберу</button>`;
 
     (submission?.answers || []).forEach((a) => {
@@ -426,8 +431,10 @@ async function renderSubmissionDashboard() {
               <div class="msg-from">${s.studentId?.name || "Студент"} (${s.studentId?.className || "-"})</div>
               <div class="msg-meta">${s.videoId?.num || "-"}: ${s.videoId?.title || "Видео"} · ${new Date(s.createdAt).toLocaleString("kk-KZ")}</div>
             </div>
-            <span class="badge ${s.status === "graded" ? "b-green" : "b-amber"}">${s.status === "graded" ? `Бағаланған (${s.score || 0})` : "Бағаны күтіп тұр"}</span>
+            <span class="badge ${s.status === "graded" ? "b-green" : "b-amber"}">${s.status === "graded" ? `Мұғалім бағалады (${s.score || 0})` : "Мұғалім бағасын күтіп тұр"}</span>
           </div>
+          <div class="msg-text">AI: ${s.aiEvaluatedAt ? (s.aiScore || 0) : "Әлі жоқ"}${s.aiFeedback ? ` · ${s.aiFeedback}` : ""}</div>
+          ${s.aiSuggestion ? `<div class="msg-text">AI ұсынысы: ${s.aiSuggestion}</div>` : ""}
           ${(s.answers || []).map((a, i) => `<div class="msg-text">${i + 1}) ${a.answerText}</div>`).join("")}
           ${(s.files || []).length ? `<div class="msg-text">Файлдар: ${(s.files || []).map((f) => `<a href="${f.url || f.dataUrl}" download="${escapeHtml(f.name)}" target="_blank" rel="noopener">${escapeHtml(f.name)}</a>`).join(" · ")}</div>` : ""}
           <div style="margin-top:10px;">

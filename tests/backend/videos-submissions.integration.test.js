@@ -89,6 +89,9 @@ describe("Videos + submissions integration", () => {
         files: [],
       });
     expect(submitRes.status).toBe(201);
+    expect(submitRes.body.submission.aiScore).toBeDefined();
+    expect(submitRes.body.submission.aiFeedback).toBeDefined();
+    expect(submitRes.body.submission.aiSuggestion).toBeDefined();
 
     const gradeRes = await request(app)
       .patch(`/api/videos/${createdVideoId}/submissions/${submitRes.body.submission._id}/grade`)
