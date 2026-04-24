@@ -521,3 +521,23 @@
 {"level":"info","message":{"durationMs":18,"method":"GET","status":200,"url":"/api/messages/conversations"},"timestamp":"2026-04-24T10:58:59.141Z"}
 {"level":"info","message":{"durationMs":7,"method":"GET","status":304,"url":"/api/users"},"timestamp":"2026-04-24T10:58:59.193Z"}
 {"level":"info","message":{"durationMs":16,"method":"GET","status":200,"url":"/api/messages/conversations/69e7778c5acdb5f7a4e55ccf/messages"},"timestamp":"2026-04-24T10:58:59.214Z"}
+{"level":"info","message":"Server running on http://localhost:5000","timestamp":"2026-04-24T11:18:21.658Z"}
+{"level":"info","message":{"durationMs":7,"method":"GET","status":200,"url":"/"},"timestamp":"2026-04-24T11:18:24.841Z"}
+{"level":"info","message":{"durationMs":2,"method":"GET","status":304,"url":"/css/main.css"},"timestamp":"2026-04-24T11:18:24.927Z"}
+{"level":"info","message":{"durationMs":3,"method":"GET","status":304,"url":"/js/api.js"},"timestamp":"2026-04-24T11:18:24.929Z"}
+{"level":"info","message":{"durationMs":1,"method":"GET","status":304,"url":"/js/profile-module.js"},"timestamp":"2026-04-24T11:18:24.929Z"}
+{"level":"info","message":{"durationMs":2,"method":"GET","status":304,"url":"/js/app.js"},"timestamp":"2026-04-24T11:18:24.930Z"}
+{"level":"info","message":{"durationMs":1,"method":"GET","status":304,"url":"/js/ui-utils.js"},"timestamp":"2026-04-24T11:18:24.931Z"}
+{"level":"info","message":{"durationMs":16,"method":"GET","status":200,"url":"/api/auth/me"},"timestamp":"2026-04-24T11:18:25.015Z"}
+{"level":"info","message":{"durationMs":11,"method":"GET","status":304,"url":"/api/videos"},"timestamp":"2026-04-24T11:18:25.072Z"}
+{"level":"info","message":{"durationMs":16,"method":"GET","status":304,"url":"/api/site-config"},"timestamp":"2026-04-24T11:18:25.079Z"}
+{"level":"info","message":{"durationMs":16,"method":"GET","status":200,"url":"/api/messages/conversations"},"timestamp":"2026-04-24T11:18:25.080Z"}
+{"level":"info","message":{"durationMs":5,"method":"GET","status":304,"url":"/api/users"},"timestamp":"2026-04-24T11:18:25.112Z"}
+{"level":"info","message":{"durationMs":14,"method":"GET","status":200,"url":"/api/messages/conversations/69e7778c5acdb5f7a4e55ccf/messages"},"timestamp":"2026-04-24T11:18:25.130Z"}
+{"level":"info","message":{"durationMs":114,"method":"POST","status":401,"url":"/api/auth/login"},"timestamp":"2026-04-24T11:18:34.731Z"}
+{"level":"info","message":{"durationMs":113,"method":"POST","status":200,"url":"/api/auth/login"},"timestamp":"2026-04-24T11:18:40.752Z"}
+{"level":"info","message":{"durationMs":20,"method":"GET","status":304,"url":"/api/site-config"},"timestamp":"2026-04-24T11:18:40.777Z"}
+{"level":"info","message":{"durationMs":19,"method":"GET","status":304,"url":"/api/videos"},"timestamp":"2026-04-24T11:18:40.779Z"}
+{"level":"info","message":{"durationMs":18,"method":"GET","status":200,"url":"/api/messages/conversations"},"timestamp":"2026-04-24T11:18:40.780Z"}
+{"level":"info","message":{"durationMs":20,"method":"GET","status":200,"url":"/api/videos/progress/me"},"timestamp":"2026-04-24T11:18:40.783Z"}
+{"level":"info","message":{"durationMs":7,"method":"GET","status":200,"url":"/api/messages/conversations/69e769fea38f8540e88f4de7/messages"},"timestamp":"2026-04-24T11:18:40.794Z"}
