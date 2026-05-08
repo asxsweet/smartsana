@@ -27,6 +27,7 @@ const quickQuestionSchema = new mongoose.Schema(
     label: String,
     prompt: String,
     type: { type: String, enum: ["quick", "error"], default: "quick" },
+    answer: { type: String, default: "" },
   },
   { _id: true }
 );

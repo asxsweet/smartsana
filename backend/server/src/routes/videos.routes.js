@@ -29,7 +29,7 @@ const submitSchema = z.object({
   })).optional().default([]),
   files: z.array(z.object({
     name: z.string().min(1),
-    type: z.string().optional().default("application/octet-stream"),
+    type: z.string().optional().default("image/jpeg"),
     size: z.coerce.number().min(0).max(8 * 1024 * 1024).optional().default(0),
     dataUrl: z.string().startsWith("data:").min(1),
   })).optional().default([]),
@@ -127,12 +127,21 @@ router.post("/:id/submissions", requireAuth, async (req, res) => {
   if (invalid) return res.status(400).json({ message: "Invalid task reference" });
   const hasTextAnswer = parsed.data.answers.some((a) => (a.answerText || "").trim().length > 0);
   const hasFiles = (parsed.data.files || []).length > 0;
+  const hasNonImage = (parsed.data.files || []).some((f) => {
+    const fileType = String(f.type || "").toLowerCase();
+    const isImageType = fileType.startsWith("image/");
+    const isImageName = /\.(jpg|jpeg|png|webp|gif|bmp)$/i.test(String(f.name || ""));
+    return !isImageType && !isImageName;
+  });
+  if (hasNonImage) {
+    return res.status(400).json({ message: "Тек фото форматтарын жүктеуге болады (jpg, jpeg, png, webp, gif, bmp)" });
+  }
   const totalFileSize = (parsed.data.files || []).reduce((sum, f) => sum + (f.size || 0), 0);
   if (totalFileSize > 20 * 1024 * 1024) {
-    return res.status(400).json({ message: "Файлдардың жалпы көлемі 20MB-тан аспауы керек" });
+    return res.status(400).json({ message: "Фотолардың жалпы көлемі 20MB-тан аспауы керек" });
   }
   if (!hasTextAnswer && !hasFiles) {
-    return res.status(400).json({ message: "Кемінде мәтін жауабы немесе файл болуы керек" });
+    return res.status(400).json({ message: "Кемінде мәтін жауабы немесе фото болуы керек" });
   }
   if (hasFiles && !isCloudinaryConfigured) {
     return res.status(500).json({ message: "Файл жүктеу сервисі бапталмаған (Cloudinary env қажет)" });
@@ -173,6 +182,7 @@ router.post("/:id/submissions", requireAuth, async (req, res) => {
   const aiGrade = await generateAiGrade({
     video,
     answers: parsed.data.answers.map((a) => ({ taskId: a.taskId, answerText: (a.answerText || "").trim() })),
+    files: uploadedFiles,
   });
 
   if (aiGrade) {

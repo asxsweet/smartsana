@@ -157,7 +157,7 @@
             <button class="sbtn" onclick="sendAI('q')"><svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg></button>
           </div>
         </div>
-        <div>
+        <div class="side-scroll">
           <div class="side-card">
             <h4>Жылдам сұрақтар</h4>
             <div class="qq" onclick="setQ('Arduino дегеніміз не?')">Arduino дегеніміз не?</div>
@@ -276,13 +276,15 @@
         </div>
         <div style="background:var(--card);border:0.5px solid var(--border);border-radius:var(--r);padding:22px;">
           <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:14px;">Соңғы тіркелгендер</div>
-          <table class="data-table" id="recentTable">
-            <tr><th>Аты-жөні</th><th>Сынып</th><th>Тіркелу уақыты</th><th>Рөл</th></tr>
-          </table>
+          <div class="teacher-table-panel">
+            <table class="data-table" id="recentTable">
+              <tr><th>Аты-жөні</th><th>Сынып</th><th>Тіркелу уақыты</th><th>Рөл</th></tr>
+            </table>
+          </div>
         </div>
       </div>
       <div class="tp-content" id="tp-students">
-        <div style="background:var(--card);border:0.5px solid var(--border);border-radius:var(--r);overflow:hidden;">
+        <div class="teacher-table-panel" style="background:var(--card);border:0.5px solid var(--border);border-radius:var(--r);">
           <table class="data-table" id="studentsTable">
             <tr><th>Аты-жөні</th><th>Email</th><th>Сынып</th><th>Рөл</th><th>Іс-әрекет</th></tr>
           </table>
@@ -300,9 +302,11 @@
           <div class="fg"><label class="fl">YouTube сілтемесі (міндетті емес)</label><input class="fi" id="v_url" placeholder="https://youtube.com/watch?v=..."></div>
           <button class="add-btn" onclick="addVideo()">Видео қосу</button>
         </div>
-        <table class="data-table" id="videosTable">
-          <tr><th>№</th><th>Тақырып</th><th>Ұзақтық</th><th>Іс-әрекет</th></tr>
-        </table>
+        <div class="teacher-table-panel" style="margin-top:14px;">
+          <table class="data-table" id="videosTable">
+            <tr><th>№</th><th>Тақырып</th><th>Ұзақтық</th><th>Іс-әрекет</th></tr>
+          </table>
+        </div>
       </div>
       <div class="tp-content" id="tp-msgs"><div class="msg-list" id="msgList"></div></div>
     </div>

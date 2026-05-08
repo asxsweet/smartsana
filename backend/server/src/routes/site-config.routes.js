@@ -2,25 +2,9 @@ const express = require("express");
 const { z } = require("zod");
 const SiteConfig = require("../models/SiteConfig");
 const { requireAuth, requireRole } = require("../middlewares/auth");
+const DEFAULT_QUICK_QUESTIONS = require("../constants/default-quick-questions");
 
 const router = express.Router();
-
-const DEFAULT_QUICK_QUESTIONS = [
-  { label: "Arduino дегеніміз не?", prompt: "Arduino дегеніміз не және қайда қолданылады?", type: "quick" },
-  { label: "Uno мен Nano айырмасы", prompt: "Arduino Uno мен Nano арасындағы айырмашылықтарды түсіндір", type: "quick" },
-  { label: "Breadboard қалай жұмыс істейді?", prompt: "Breadboard қолдану ережелерін түсіндір", type: "quick" },
-  { label: "LED + резистор таңдауы", prompt: "LED үшін резисторды қалай таңдаймын? Формуламен түсіндір", type: "quick" },
-  { label: "DHT11 оқу логикасы", prompt: "DHT11 датчигінен мәлімет оқу қадамдарын түсіндір", type: "quick" },
-  { label: "HC-SR04 формуласы", prompt: "HC-SR04 арқылы қашықтық есептеу формуласын түсіндір", type: "quick" },
-  { label: "analogRead vs digitalRead", prompt: "analogRead және digitalRead айырмашылығы қандай?", type: "quick" },
-  { label: "IoT жобаны неден бастау?", prompt: "Arduino IoT жобасын бастау үшін қадамдық жоспар бер", type: "quick" },
-  { label: "was not declared", prompt: "was not declared in this scope қатесін қалай түзетемін?", type: "error" },
-  { label: "expected ; before", prompt: "expected ';' before қатесінің негізгі себептері қандай?", type: "error" },
-  { label: "No such file or directory", prompt: "No such file or directory қатесін Arduino IDE-де қалай шешемін?", type: "error" },
-  { label: "avrdude sync error", prompt: "avrdude: stk500_recv() programmer is not responding қатесін шешу жолдары", type: "error" },
-  { label: "COM порт көрінбейді", prompt: "Arduino COM порт неге көрінбейді және қалай түзетуге болады?", type: "error" },
-  { label: "Upload failed", prompt: "Sketch upload failed қатесін жүйелі түрде диагностикалау қадамдары", type: "error" },
-];
 
 const configSchema = z.object({
   sensors: z.array(z.object({
@@ -44,6 +28,7 @@ const configSchema = z.object({
     label: z.string(),
     prompt: z.string(),
     type: z.enum(["quick", "error"]),
+    answer: z.string().optional().default(""),
   })),
 });
 

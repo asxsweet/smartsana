@@ -27,6 +27,7 @@ function normalizeSiteConfigPayload(payload) {
       ...q,
       label: String(q?.label || ""),
       prompt: String(q?.prompt || ""),
+      answer: String(q?.answer || ""),
       type: q?.type === "error" ? "error" : "quick",
     })),
   };

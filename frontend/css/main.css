@@ -3,7 +3,7 @@
 body{font-family:var(--font);background:var(--bg);color:var(--text);overflow-x:hidden;}
 ::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:var(--bg2);}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
 #authScreen{position:fixed;inset:0;background:var(--bg);z-index:999;display:flex;align-items:center;justify-content:center;padding:20px;}
-.auth-box{background:var(--card);border:0.5px solid var(--border2);border-radius:20px;padding:40px;width:100%;max-width:420px;}
+.auth-box{background:var(--card);border:0.5px solid var(--border2);border-radius:20px;padding:40px;width:100%;max-width:420px;max-height:calc(100vh - 40px);overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;}
 .auth-logo{display:flex;align-items:center;gap:10px;margin-bottom:28px;justify-content:center;}
 .auth-logo-icon{width:40px;height:40px;background:linear-gradient(135deg,#63b3ed,#4fd1c5);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;color:#0a0e1a;letter-spacing:.02em;}
 .auth-logo-text{font-family:var(--mono);font-size:17px;font-weight:600;color:var(--accent);}
@@ -135,7 +135,8 @@ pre{background:#0d1117;padding:18px;font-family:var(--mono);font-size:13px;line-
 .cpybtn{padding:5px 13px;background:transparent;border:0.5px solid var(--border2);border-radius:6px;color:var(--text2);font-size:12px;font-family:var(--font);cursor:pointer;transition:all .15s;}
 .cpybtn:hover{background:var(--bg3);color:var(--text);}
 .chat-layout{display:grid;grid-template-columns:1fr 300px;gap:22px;align-items:start;}
-@media(max-width:900px){.chat-layout{grid-template-columns:1fr;}}
+.chat-layout>.side-scroll{max-height:min(500px,calc(100vh - 200px));overflow-y:auto;overflow-x:hidden;padding-right:6px;-webkit-overflow-scrolling:touch;display:flex;flex-direction:column;gap:14px;}
+@media(max-width:900px){.chat-layout{grid-template-columns:1fr;}.chat-layout>.side-scroll{max-height:none;overflow:visible;}}
 .chatbox{background:var(--card);border:0.5px solid var(--border);border-radius:var(--r);display:flex;flex-direction:column;height:500px;}
 .ctop{padding:14px 18px;border-bottom:0.5px solid var(--border);display:flex;align-items:center;gap:10px;}
 .cav{width:32px;height:32px;background:linear-gradient(135deg,#63b3ed,#4fd1c5);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#0a0e1a;flex-shrink:0;}
@@ -193,6 +194,14 @@ pre{background:#0d1117;padding:18px;font-family:var(--mono);font-size:13px;line-
 .tp-tab.active{border-color:var(--purple);color:var(--purple);background:rgba(183,148,244,.08);}
 .tp-content{display:none;}
 .tp-content.active{display:block;}
+
+/* Мұғалім панелі: хабарламалар, студент басқару, тапсырмалар тізімі экраннан асып кетпесін. */
+.tp-content#tp-msgs #msgList{max-height:min(72vh,calc(100vh - 280px));overflow-y:auto;overflow-x:hidden;padding-right:6px;-webkit-overflow-scrolling:touch;}
+#submissionDashboard>.msg-list{max-height:min(74vh,calc(100vh - 320px));overflow-y:auto;overflow-x:hidden;padding-right:6px;-webkit-overflow-scrolling:touch;}
+#studentsManageList,#studentProgressPanel{max-height:min(68vh,calc(100vh - 380px));overflow-y:auto;overflow-x:hidden;padding-right:4px;-webkit-overflow-scrolling:touch;}
+
+/* Ұзартылған кестелер: скролл бірегей бөлім болып қалады. */
+.teacher-table-panel{overflow:auto;-webkit-overflow-scrolling:touch;max-height:min(70vh,calc(100vh - 340px));}
 .stats-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px;margin-bottom:28px;}
 .stat-card{background:var(--card);border:0.5px solid var(--border);border-radius:var(--r);padding:18px;}
 .stat-card .n{font-size:28px;font-weight:800;font-family:var(--mono);color:var(--accent);}
@@ -232,12 +241,27 @@ pre{background:#0d1117;padding:18px;font-family:var(--mono);font-size:13px;line-
 .modal{background:var(--card);border:0.5px solid var(--border2);border-radius:20px;padding:28px;width:100%;max-width:460px;}
 .modal h3{font-size:17px;font-weight:700;color:var(--text);margin-bottom:14px;}
 .modal-btns{display:flex;gap:9px;margin-top:18px;}
+
+/* Ұзақ формалар: overlay мен модал үшін экран бойынша скролл (видео қосу, датчик, CRUD). */
+.modal-overlay#crudModalOverlay{align-items:flex-start;justify-content:center;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;}
+.modal-overlay#crudModalOverlay .modal{margin:24px auto;max-height:calc(100vh - 48px);max-width:min(520px,100%);display:flex;flex-direction:column;}
+.modal-overlay#crudModalOverlay .modal>h3{flex-shrink:0;}
+.modal-overlay#crudModalOverlay #crudModalBody{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;padding-right:6px;-webkit-overflow-scrolling:touch;}
+.modal-overlay#crudModalOverlay .modal-btns{flex-shrink:0;margin-top:18px;}
+
+/* Растау терезесі: ұзын мәтін және кішкентай экран (қысқа мәтінде түйме жоғарыда қалады). */
+.modal-overlay#confirmModalOverlay{align-items:flex-start;justify-content:center;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;}
+.modal-overlay#confirmModalOverlay .modal{margin:24px auto;max-height:calc(100vh - 48px);overflow-y:auto;display:flex;flex-direction:column;}
+.modal-overlay#confirmModalOverlay #confirmModalMessage{overflow-y:auto;overflow-x:hidden;max-height:min(58vh,calc(100vh - 220px));padding-right:4px;-webkit-overflow-scrolling:touch;}
+.modal-overlay#confirmModalOverlay .modal-btns{flex-shrink:0;margin-top:18px;}
 .mbtn{flex:1;padding:10px;border-radius:var(--r2);font-family:var(--font);font-weight:600;font-size:14px;cursor:pointer;transition:all .2s;}
 .mbtn-cancel{background:var(--bg3);border:0.5px solid var(--border);color:var(--text2);}
 .mbtn-ok{background:var(--accent);border:none;color:#0a0e1a;}
-.modal-overlay#lessonModalOverlay{align-items:flex-start;overflow-y:auto;}
+.modal-overlay#lessonModalOverlay{align-items:flex-start;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;}
 .modal-overlay#lessonModalOverlay .modal{margin:24px auto;max-height:calc(100vh - 48px);display:flex;flex-direction:column;}
-#lessonModalBody{flex:1;min-height:0;overflow:auto;padding-right:4px;}
+.modal-overlay#lessonModalOverlay .modal>h3{flex-shrink:0;}
+#lessonModalBody{flex:1;min-height:0;overflow:auto;padding-right:6px;-webkit-overflow-scrolling:touch;}
+.modal-overlay#lessonModalOverlay .modal-btns{flex-shrink:0;}
 .sub-btn:disabled,.mbtn:disabled,.cpybtn:disabled,.add-btn:disabled{opacity:.65;cursor:not-allowed;pointer-events:none;}
 @media(max-width:900px){
   header{padding:8px 12px;height:auto;gap:10px;align-items:flex-start;flex-wrap:wrap;}

@@ -397,7 +397,7 @@ async function openVideoLesson(videoId) {
             ${s.aiSuggestion ? `<div class="msg-text">AI ұсынысы: ${s.aiSuggestion}</div>` : ""}
             <div class="msg-text">Мұғалім бағасы: ${s.status === "graded" ? (s.score || 0) : "Қойылмаған"}${s.feedback ? ` · ${s.feedback}` : ""}</div>
             ${(s.answers || []).map((a, i) => `<div class="msg-text">${i + 1}) ${a.answerText}</div>`).join("")}
-            ${(s.files || []).length ? `<div class="msg-text">Файлдар: ${(s.files || []).map((f) => `<a href="${f.url || f.dataUrl}" download="${escapeHtml(f.name)}" target="_blank" rel="noopener">${escapeHtml(f.name)}</a>`).join(" · ")}</div>` : ""}
+            ${(s.files || []).length ? `<div class="msg-text">Фотолар: ${(s.files || []).map((f) => `<a href="${f.url || f.dataUrl}" download="${escapeHtml(f.name)}" target="_blank" rel="noopener">${escapeHtml(f.name)}</a>`).join(" · ")}</div>` : ""}
             <div style="display:flex;gap:8px;margin-top:8px;">
               <input class="fi" id="grade-score-${s._id}" placeholder="Ұпай" style="max-width:90px;">
               <input class="fi" id="grade-feedback-${s._id}" placeholder="Кері байланыс">
@@ -417,10 +417,10 @@ async function openVideoLesson(videoId) {
         ${(video.tasks || []).map((t, i) => `<div class="qq"><strong>${i + 1}. ${t.title}</strong><br>${t.instruction}<br><textarea class="fta" id="answer-${t._id}" placeholder="Жауабыңызды жазыңыз..."></textarea></div>`).join("") || '<div class="qq">Бұл видеода тапсырма жоқ</div>'}
       </div>
       <div class="fg">
-        <div class="fl">Орындалған файлдар (әртүрлі формат қолдау бар)</div>
-        <input class="fi" id="submission-files" type="file" multiple>
+        <div class="fl">Орындалған фотолар (сурет жүктесеңіз AI бағалайды)</div>
+        <input class="fi" id="submission-files" type="file" multiple accept="image/*">
       </div>
-      ${submission?.files?.length ? `<div class="note-box">Бұрын жіберілген файлдар: ${(submission.files || []).map((f) => `<a href="${f.url || f.dataUrl}" download="${escapeHtml(f.name)}" target="_blank" rel="noopener">${escapeHtml(f.name)}</a>`).join(" · ")}</div>` : ""}
+      ${submission?.files?.length ? `<div class="note-box">Бұрын жіберілген фотолар: ${(submission.files || []).map((f) => `<a href="${f.url || f.dataUrl}" download="${escapeHtml(f.name)}" target="_blank" rel="noopener">${escapeHtml(f.name)}</a>`).join(" · ")}</div>` : ""}
       ${submission ? `<div class="note-box">AI бағасы: ${(submission.aiEvaluatedAt || (submission.aiFeedback || "").trim() || (submission.aiSuggestion || "").trim()) ? (submission.aiScore || 0) : "Әлі жоқ"}${submission.aiFeedback ? ` · ${submission.aiFeedback}` : ""}</div>` : ""}
       ${submission?.aiSuggestion ? `<div class="note-box">AI ұсынысы: ${submission.aiSuggestion}</div>` : ""}
       ${submission ? `<div class="note-box">Мұғалім бағасы: ${submission.status === "graded" ? (submission.score || 0) : "Қойылмаған"}${submission.feedback ? ` · ${submission.feedback}` : ""}</div>` : ""}
@@ -449,21 +449,25 @@ async function submitVideoTasks(videoId) {
   const maxPerFile = 8 * 1024 * 1024;
   const totalSize = rawFiles.reduce((sum, f) => sum + (f.size || 0), 0);
   if (rawFiles.some((f) => (f.size || 0) > maxPerFile)) {
-    showToast("Әр файл көлемі 8MB-тан аспауы керек.", "error");
+    showToast("Әр фото көлемі 8MB-тан аспауы керек.", "error");
     return;
   }
   if (totalSize > 20 * 1024 * 1024) {
-    showToast("Файлдардың жалпы көлемі 20MB-тан аспауы керек.", "error");
+    showToast("Фотолардың жалпы көлемі 20MB-тан аспауы керек.", "error");
+    return;
+  }
+  if (rawFiles.some((f) => !(String(f.type || "").toLowerCase().startsWith("image/")))) {
+    showToast("Тек фото жүктеуге болады.", "error");
     return;
   }
   const files = await Promise.all(rawFiles.map(async (file) => ({
     name: file.name,
-    type: file.type || "application/octet-stream",
+    type: file.type || "image/jpeg",
     size: file.size || 0,
     dataUrl: await fileToDataUrl(file),
   })));
   if (!answers.length && !files.length) {
-    showToast("Кемінде мәтін жауабын немесе файл жүктеңіз.", "error");
+    showToast("Кемінде мәтін жауабын немесе фото жүктеңіз.", "error");
     return;
   }
   await apiRequest(`/videos/${videoId}/submissions`, { method: "POST", body: JSON.stringify({ answers, files }) });
@@ -514,7 +518,7 @@ async function renderSubmissionDashboard() {
           <div class="msg-text">AI: ${(s.aiEvaluatedAt || (s.aiFeedback || "").trim() || (s.aiSuggestion || "").trim()) ? (s.aiScore || 0) : "Әлі жоқ"}${s.aiFeedback ? ` · ${s.aiFeedback}` : ""}</div>
           ${s.aiSuggestion ? `<div class="msg-text">AI ұсынысы: ${s.aiSuggestion}</div>` : ""}
           ${(s.answers || []).map((a, i) => `<div class="msg-text">${i + 1}) ${a.answerText}</div>`).join("")}
-          ${(s.files || []).length ? `<div class="msg-text">Файлдар: ${(s.files || []).map((f) => `<a href="${f.url || f.dataUrl}" download="${escapeHtml(f.name)}" target="_blank" rel="noopener">${escapeHtml(f.name)}</a>`).join(" · ")}</div>` : ""}
+          ${(s.files || []).length ? `<div class="msg-text">Фотолар: ${(s.files || []).map((f) => `<a href="${f.url || f.dataUrl}" download="${escapeHtml(f.name)}" target="_blank" rel="noopener">${escapeHtml(f.name)}</a>`).join(" · ")}</div>` : ""}
           <div style="margin-top:10px;">
             <button class="cpybtn" onclick="openVideoLesson('${s.videoId?._id}')">Сабаққа өту</button>
           </div>
@@ -797,7 +801,7 @@ function renderQuestions() {
             <button class="cpybtn" onclick="event.stopPropagation();deleteQuestion(${idx})" style="color:var(--red);border-color:rgba(252,129,129,.35);">Жою</button>
           </div>`
         : "";
-      return `<div class="qq" onclick="setQ('${q.prompt.replace(/'/g, "\\'")}')">${q.label}${controls}</div>`;
+      return `<div class="qq" onclick="selectQuickQuestion(${idx})">${q.label}${controls}</div>`;
     }).join('')}${currentUser?.role === 'teacher' ? '<button class="cpybtn" onclick="addQuickQuestionPrompt()">+ Қосу</button>' : ''}`;
   }
   if (cards[1]) {
@@ -809,7 +813,7 @@ function renderQuestions() {
             <button class="cpybtn" onclick="event.stopPropagation();deleteQuestion(${idx})" style="color:var(--red);border-color:rgba(252,129,129,.35);">Жою</button>
           </div>`
         : "";
-      return `<div class="qq" onclick="setQ('${q.prompt.replace(/'/g, "\\'")}')">${q.label}${controls}</div>`;
+      return `<div class="qq" onclick="selectQuickQuestion(${idx})">${q.label}${controls}</div>`;
     }).join('')}${currentUser?.role === 'teacher' ? '<button class="cpybtn" onclick="addErrorQuestionPrompt()">+ Қосу</button>' : ''}`;
   }
 }
@@ -818,8 +822,9 @@ async function addQuickQuestionPrompt() {
   openCrudModal("Жылдам AI сұрақ қосу", [
     { key: "label", label: "Көрінетін атауы", value: "" },
     { key: "prompt", label: "AI-ға жіберілетін текст", value: "", textarea: true },
+    { key: "answer", label: "Дайын жауап (бос болса AI шақырылады)", value: "", textarea: true },
   ], async (v) => {
-    siteConfig.quickQuestions.push({ label: v.label, prompt: v.prompt, type: 'quick' });
+    siteConfig.quickQuestions.push({ label: v.label, prompt: v.prompt, type: "quick", answer: v.answer || "" });
     await apiRequest('/site-config', { method: 'PUT', body: JSON.stringify(siteConfig) });
     renderQuestions();
   });
@@ -829,8 +834,9 @@ async function addErrorQuestionPrompt() {
   openCrudModal("Қате-шешім сұрағын қосу", [
     { key: "label", label: "Көрінетін атауы", value: "" },
     { key: "prompt", label: "AI-ға жіберілетін текст", value: "", textarea: true },
+    { key: "answer", label: "Дайын жауап (бос болса AI шақырылады)", value: "", textarea: true },
   ], async (v) => {
-    siteConfig.quickQuestions.push({ label: v.label, prompt: v.prompt, type: 'error' });
+    siteConfig.quickQuestions.push({ label: v.label, prompt: v.prompt, type: "error", answer: v.answer || "" });
     await apiRequest('/site-config', { method: 'PUT', body: JSON.stringify(siteConfig) });
     renderQuestions();
   });
@@ -842,12 +848,13 @@ async function editQuestionPrompt(index) {
   openCrudModal(item.type === "error" ? "Қате-шешім сұрағын өңдеу" : "Жылдам AI сұрағын өңдеу", [
     { key: "label", label: "Көрінетін атауы", value: item.label || "" },
     { key: "prompt", label: "AI-ға жіберілетін текст", value: item.prompt || "", textarea: true },
+    { key: "answer", label: "Дайын жауап (бос болса AI шақырылады)", value: item.answer || "", textarea: true },
   ], async (v) => {
     if (!v.label || !v.prompt) {
       showToast("Атауы мен мәтінін толтырыңыз.", "error");
       return;
     }
-    siteConfig.quickQuestions[index] = { ...item, label: v.label, prompt: v.prompt };
+    siteConfig.quickQuestions[index] = { ...item, label: v.label, prompt: v.prompt, answer: v.answer || "" };
     await apiRequest('/site-config', { method: 'PUT', body: JSON.stringify(siteConfig) });
     renderQuestions();
     showToast("AI сұрағы жаңартылды.", "success");
@@ -887,6 +894,29 @@ async function sendAI() {
     msgsEl.innerHTML += `<div class="msg"><div class="mav bav">AI</div><div class="bubble bot-b" style="color:var(--red);">Қате: ${errText}</div></div>`;
   }
   msgsEl.scrollTop = msgsEl.scrollHeight;
+}
+
+async function selectQuickQuestion(index) {
+  const q = (siteConfig.quickQuestions || [])[index];
+  if (!q) return;
+  const inp = document.getElementById("qInput");
+  const msgsEl = document.getElementById("qMsgs");
+  const userText = (q.prompt || q.label || "").trim();
+  if (inp) inp.value = "";
+
+  const cached = typeof q.answer === "string" ? q.answer.trim() : "";
+  if (cached) {
+    aiHistory.q.push({ role: "user", content: userText });
+    msgsEl.innerHTML += `<div class="msg user"><div class="mav uav">Мен</div><div class="bubble user-b">${escapeHtml(userText)}</div></div>`;
+    aiHistory.q.push({ role: "assistant", content: cached });
+    const bodyHtml = escapeHtml(cached).replace(/\n/g, "<br>");
+    msgsEl.innerHTML += `<div class="msg"><div class="mav bav">AI</div><div class="bubble bot-b">${bodyHtml}<div style="font-size:11px;color:var(--text3);margin-top:8px;">📚 Дайын жауап</div></div></div>`;
+    msgsEl.scrollTop = msgsEl.scrollHeight;
+    return;
+  }
+
+  if (inp) inp.value = userText;
+  await sendAI();
 }
 
 function setQ(q) { document.getElementById('qInput').value = q; sendAI(); }
@@ -1021,7 +1051,7 @@ function openCrudModal(title, fields, onSave) {
     <div class="fg">
       <label class="fl">${f.label}</label>
       ${f.textarea
-        ? `<textarea class="fta" data-field="${f.key}">${f.value || ""}</textarea>`
+        ? `<textarea class="fta" data-field="${f.key}">${escapeHtml(f.value || "")}</textarea>`
         : `<input class="fi" data-field="${f.key}" value="${(f.value || "").replace(/"/g, "&quot;")}">`}
     </div>`).join("");
 
